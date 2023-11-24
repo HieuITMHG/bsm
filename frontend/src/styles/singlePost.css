@@ -1,0 +1,79 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+:root {
+    --button-collor: rgb(145,199,233);
+    --shadow-collor: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+    --overlay-collor:  rgba(128, 128, 128, 0.5);
+    --popup-collor:#f0f2f5;
+  }
+
+
+.singlePostContainer {
+    height: 100vh;
+    display: flex;
+}
+
+.pictureContainer {  
+    flex-grow: 1;  
+    max-height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: rgb(224, 252, 254);
+}
+
+.pictureContainer img, video{    
+    object-fit: contain;
+    max-width: 100%;
+    max-height: 100%;
+ }
+
+.commentSide {
+    overflow-y: auto;
+    width: 400px;
+    background-color: rgb(198 226 255);
+    
+}
+
+.commentView {
+    width: 90%;
+    border-radius: 20px;
+}
+
+.scrollable {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    width: 100%;
+}
+
+.xi {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    cursor: pointer;
+}
+
+.xi:hover {
+    background-color: var(--overlay-collor);
+}
+
+.postInfo {
+    margin: 15px;
+    width: 90%;
+    background-color: white;
+    box-shadow: var(--shadow-collor);
+    border-radius: 20px;
+}
+
+.postInfo div{
+    margin: 5px 0 5px 0;
+}
+
+.comment {
+    width: 100%;
+}

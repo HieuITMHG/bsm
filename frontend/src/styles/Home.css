@@ -1,0 +1,456 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+:root {
+    --button-collor: rgb(145,199,233);
+    --shadow-collor: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+    --overlay-collor:  rgba(128, 128, 128, 0.5);
+    --popup-collor:#f0f2f5;
+  }
+
+.homeContainer {
+    display: flex;
+}
+
+
+
+
+
+.mainView {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+}
+
+
+.postsView {
+    width: 600px;
+}
+
+.postList {
+    width: 100%;
+    padding: 0;
+}
+
+/* create post popup css */
+
+.overLay {
+    height: 100vh;
+    width: 100vw;
+    background-color: rgba(128, 128, 128, 0.5);
+    position: fixed;
+    z-index: 100;
+    inset: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.createFormContainer {
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    border-radius: 30px;
+    height: 500px;
+    width: 500px;
+    background-color: white;
+    box-shadow: var(--shadow-collor);
+    position: relative;
+    align-items: center;
+}
+
+
+#openButton {
+    width: 600px;
+    height: 50px;
+    background-color: #f0f2f5;
+    border: none;
+    border-radius: 20px;
+    color: #a2a4a8;
+}
+
+#openButton:hover {
+    background-color: #e4e6e9;
+}
+
+.triggerForm {
+    border-right: 1px solid gray;
+    width: 80%;
+}
+
+
+.caption {
+    height: auto;
+    width: 400px;
+    resize: none;
+    border-radius: 20px;
+    outline: none;
+    padding: 10px;
+    margin-bottom: 20px;
+    font-size: 20px;
+    overflow-y: hidden; 
+}
+
+
+.closePostForm .material-symbols-outlined{
+    cursor: pointer;
+    position: absolute;
+    top: 10px;
+    right: 15px;
+}
+
+.closePostForm .material-symbols-outlined:hover{
+    background-color: var(--overlay-collor);
+}
+
+.postBtn {
+    background-color: var(--button-collor);
+    width: 300px;
+    height: 40px;
+    border: none;
+    border-radius: 20px;
+    color: white;
+}
+
+.controller {
+    position: relative;
+    height: 100px;
+    display: flex;
+    justify-content: center;
+}
+
+
+.controller .material-symbols-outlined {
+    cursor: pointer;
+    font-size: 30px;
+}
+
+
+.controller button {
+    position: absolute;
+    bottom: 0;
+}
+
+
+
+
+
+/* css for post view */
+
+
+.postsContainer {
+    height: calc();
+    max-height: 600px;
+    width: 100%;
+    box-shadow: var(--shadow-collor);
+    margin-top:10px;
+    border-radius: 20px;
+    font-size: 20px;
+    padding: 5px;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-evenly;
+    box-sizing: border-box;
+    position: relative;
+}
+
+.more {
+    position: absolute;
+    top: 1px;
+    right: 10px;
+}
+
+
+.userInfo {
+    display: flex;
+    justify-content: flex-start;
+    width: 100%;
+    padding-left: 35px;
+    align-items: center;
+}
+
+
+
+.profileOpen a {
+    padding-left: 10px;
+    display: flex;
+    justify-content: flex-start;
+}
+
+.profileOpen a div {
+    margin-right: 10px;
+}
+
+.userName {
+    padding-left: 10px;
+}
+
+.displayCaption {
+    width: 100%;
+    height: auto;
+    padding: 5px 0 5px 0px;
+    border-top: 1px solid gray;
+    border-bottom: 1px solid gray;
+    display: flex;
+    text-decoration: none;
+    color: black;
+    justify-content: center;
+}
+
+.mediaContainer {
+    width: 95%;
+    height: 75%;
+    border-radius: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.mediaCraper {
+    height: 100%;
+    max-width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.media {
+    border-radius: 20px;
+    max-height: 100%;
+    width: 100%;
+    height: auto;
+    display: block;
+}
+
+.interactSection {
+    display: flex;
+    width: 100%;
+    justify-content: space-evenly;
+    align-items: center;
+}
+
+.commentCreator {
+    width: 80%;
+    height: 40px;
+    background-color:#f0f2f5;;
+    border-radius: 20px;
+    margin-left: 10px;
+    font-size: normal;
+    align-items: center;
+    display: flex;
+}
+
+.triggerComment {
+    cursor: pointer;
+    width: 100%;
+    height: 100%;
+    border-radius: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.triggerComment:hover {
+    background-color: #e4e6e9;
+}
+
+
+.userListContaier {
+    margin-left: 350px;
+    display: flex;
+    padding: 50px;
+    flex-wrap: wrap;
+}
+
+.love {
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+}
+
+
+/* follow */
+
+.follow_btn {
+    background-color: var(--button-collor);
+    border-radius: 20px;
+    border: 1px solid white;
+    color: white;
+    width: 100px;
+    height: 35px;
+    box-sizing: border-box;
+}
+
+
+
+/* AVATAR */
+
+
+.avatarContainer {
+    height: 50x;
+    width: 50px;
+    border-radius: 50%;
+    object-fit: cover;
+    overflow: hidden;
+}
+
+.avatar {
+    width: 100%; 
+    height: auto;
+    border: none;
+    object-fit: fill;
+}
+
+
+/* PROFILE CSS */
+
+
+.profileContainer {
+    min-width: 600px;
+    display: flex;
+    flex-direction: column;  
+    min-height: 210px;
+    box-shadow: var(--shadow-collor);
+    border-radius: 20px;
+    justify-content: space-between;
+    padding: 5px;
+}
+
+.profileAvatar {
+    height: 100px;
+    width: 100px;
+    border-radius: 50%;
+    object-fit: cover;
+    overflow: hidden;
+    margin-right: 25px;
+    cursor: pointer;
+}
+
+.infoBox {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    padding-left: 25px;
+}
+
+
+.linktoprofile {
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: black;
+    text-decoration: none;
+}
+
+.aboutMeContainer {
+    height: 100px;
+    max-width: 600px;
+    border-top: 1px solid gray;
+    text-align: center;
+    display: flex;
+    padding: 25px;
+    display: flex;
+    flex-direction: column;
+}
+
+
+.triggerContainer {
+    height: 100%;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.trigger {
+    cursor: pointer;
+}
+
+
+/* .aboutMeContainer textarea {
+    max-width: 100%;
+    resize: none;
+    border: none;
+} */
+
+
+
+
+/* User card */
+
+.userCard {
+    height: 300px;
+    border: 1px solid black;
+    border-radius: 20px;
+    margin:25px;
+    display: flex;
+    width: 200px;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+
+
+
+
+
+
+
+
+
+/* Crop Avatar CSS */
+.custom-avatar-edit {
+    width: auto;
+    height: auto;
+}
+
+.cropForm {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background-color: white;
+    padding: 50px;
+    border-radius:20px ;
+    position: relative;
+}
+
+.cropForm button{
+    margin-top: 20px;
+    background-color: var(--button-collor);
+    border-radius: 20px;
+    border-color: var(--button-collor);
+    color: white;
+    width: 80px;
+}
+
+
+
+.cropAvatarContainer {
+    background-color: rgba(128, 128, 128, 0.5);
+    height: 100vh;
+    width: 100vw;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 101;
+    position: fixed;
+    top: 0;
+    left: 0;
+}
+
+
+
+button:hover {
+    background-color: white;
+    border: 1px solid var(--button-collor);
+    color: var(--button-collor);
+}
+
