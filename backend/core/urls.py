@@ -21,5 +21,6 @@ urlpatterns = [
     path('like/', views.Like.as_view(), name="like"),
     path('unlike/', views.Unlike.as_view(), name="unlike"),
     path('bio/', views.BioView.as_view(), name="bio"),
-    path('comment/', views.CommentView.as_view(), name="comment")
+    path('comment/', views.CommentView.as_view(), name="comment"),
+    path('posts/<int:pk>', views.PostView.as_view(), name='updatePost'),
 ]+router.urls

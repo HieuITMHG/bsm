@@ -95,9 +95,10 @@ class PostView(APIView):
 
         serializer = PostSerializer(post)
         return Response(serializer.data, status=status.HTTP_201_CREATED)
-    def delete(self, request):
-        post_id = request.data.get("post_id")
-        ob = Post.objects.get(pk = post_id)
+    
+    def delete(self, request, pk):
+        print("jhkahdka")
+        ob = Post.objects.get(pk = pk)
         ob.delete()
 
         return Response(status=status.HTTP_200_OK)

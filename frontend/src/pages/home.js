@@ -38,7 +38,7 @@ const Home = () => {
                     <div className='postsView'>
                         <ul className="postList">
                             {posts.map(post => (
-                                    <Post post={post} key={post.id}/>
+                                    <Post post={post} key={post.id} posts = {posts} setPosts = {setPosts}/>
                             ))}
                         </ul>
                     </div> 

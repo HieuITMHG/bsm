@@ -5,7 +5,7 @@ import { useState, useEffect } from 'react';
 import CreateComment from "./createComment";
 import UpdateCollapse from "./updateCollapse";
 
-const Post = ({post}) => {
+const Post = (props) => {
     const [isLike, setIsLike] = useState(null);
     const [isLoading, setIsLoading] = useState(true)
     const [count, setCount] = useState(0)
@@ -22,9 +22,9 @@ const Post = ({post}) => {
           })
             .then((response) => response.json())
             .then((data) => {
-                const is_liked = post.liker.includes(data.id)
+                const is_liked = props.post.liker.includes(data.id)
                 setIsLike(is_liked);
-                setCount(post.liker.length)
+                setCount(props.post.liker.length)
                 setIsLoading(false)
             })
             .catch((error) => console.error("Error:", error));
@@ -60,7 +60,7 @@ const Post = ({post}) => {
                 Authorization: `Bearer ${access_token}`,
             },
             body: JSON.stringify(
-                {post_id : post.id}
+                {post_id : props.post.id}
             )
         })
         .then((response) => response.json())
@@ -80,7 +80,7 @@ const Post = ({post}) => {
                 Authorization: `Bearer ${access_token}`,
             },
             body: JSON.stringify(
-                {post_id : post.id}
+                {post_id : props.post.id}
             )
         })
         .then((response) => response.json())
@@ -122,22 +122,22 @@ const Post = ({post}) => {
 
     if(!isLoading) {
         return (
-            <div className="postsContainer" id={post.id}>
-                <span class="material-symbols-outlined more" onClick={handleMore}>more_horiz</span>
-                {more && <UpdateCollapse post = {post}/>}
+            <div className="postsContainer" id={props.post.id}>
+                <span className="material-symbols-outlined more" onClick={handleMore}>more_horiz</span>
+                {more && <UpdateCollapse post = {props.post} posts = {props.posts} setPosts = {props.setPosts}/> }
                 <div className="userInfo">
-                    <ProfileOpen user = {post.creater}/>
+                    <ProfileOpen user = {props.post.creater}/>
                 </div>
                 
-                <NavLink className='displayCaption' to={`/post/${post.id}`}>
-                    <div>{post.caption}</div>
+                <NavLink className='displayCaption' to={`/post/${props.post.id}`}>
+                    <div>{props.post.caption}</div>
                 </NavLink>
                 
-                {post.media.length != 0 && 
+                {props.post.media.length != 0 && 
                     (
-                        <NavLink to={`/post/${post.id}`} className='mediaContainer'>
+                        <NavLink to={`/post/${props.post.id}`} className='mediaContainer'>
                         {
-                            post.media.map(medi => (
+                            props.post.media.map(medi => (
                                 <div key={`${medi.id}i`} className='mediaCraper'>
                                 {medi.file.endsWith('.mp4') || medi.file.endsWith('.webm') || medi.file.endsWith('mov')? 
                                         <video src={medi.file} controls alt='video' className='media' />
@@ -158,10 +158,10 @@ const Post = ({post}) => {
                         <div className="love" onClick={isLike ? handleUnlike : handleLike} ><span className="material-symbols-outlined" style={isLike ? style1 : style2} >favorite</span></div>
                     )} 
                     <div>{count}</div>
-                    <CreateComment post= {post} />
+                    <CreateComment post= {props.post} />
                     <div style={{display : 'flex', alignItems : 'center', position : 'relative'}}>
-                        <span style={{position:'absolute', left: '6px', top : '-2px' }}>{post.comments.length}</span>
-                        <span class="material-symbols-outlined" style={{fontSize:'35px'}}>chat_bubble</span>
+                        <span style={{position:'absolute', left: '6px', top : '-2px' }}>{props.post.comments.length}</span>
+                        <span className="material-symbols-outlined" style={{fontSize:'35px'}}>chat_bubble</span>
                     </div>
                     
                 </div>

@@ -15,11 +15,34 @@ const UpdateCollapse = (props) => {
         setIsOpenE(false)
         setIsOpenD(!isOpenD)
     }
-    
-    const handleDelete = () => {
-       
-    }
 
+    console.log(props.post.id)
+    const handleDelete = () => {
+       fetch(`/api/posts/${props.post.id}`, {
+        method: 'DELETE',
+        headers: {
+            Authorization: `Bearer ${access_token}`
+        }
+       })
+       .then((response) => {
+        if (response.ok) {
+            // Successful deletion, no content returned
+            setIsOpenD(false);
+            // Optionally handle success message or additional logic
+            console.log("Post deleted successfully");
+        } else {
+            // Handle non-successful response (e.g., error messages)
+            // Parse JSON content if available
+            return response.json().then((data) => {
+                // Handle error data if needed
+                console.error('Error deleting post:', data);
+            });
+        }
+    })
+    .catch((error) => {
+        console.error('Error deleting post:', error);
+    });
+    }
 
     return (
         <div className="updateContainer">
