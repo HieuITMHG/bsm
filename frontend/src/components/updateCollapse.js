@@ -4,7 +4,10 @@ const UpdateCollapse = (props) => {
 
     const [isOpenE, setIsOpenE] = useState(false);
     const [isOpenD, setIsOpenD] = useState(false);
-    const access_token = localStorage.getItem('access_token')
+    const [newCaption, setNewCaption] = useState(props.post.caption);
+    const access_token = localStorage.getItem('access_token');
+
+   
 
     const handleToggleE = () => {
         setIsOpenE(!isOpenE)
@@ -26,15 +29,10 @@ const UpdateCollapse = (props) => {
        })
        .then((response) => {
         if (response.ok) {
-            // Successful deletion, no content returned
-            setIsOpenD(false);
-            // Optionally handle success message or additional logic
+            props.setMore(false)
             console.log("Post deleted successfully");
         } else {
-            // Handle non-successful response (e.g., error messages)
-            // Parse JSON content if available
             return response.json().then((data) => {
-                // Handle error data if needed
                 console.error('Error deleting post:', data);
             });
         }
@@ -42,6 +40,32 @@ const UpdateCollapse = (props) => {
     .catch((error) => {
         console.error('Error deleting post:', error);
     });
+    }
+
+
+    const handleChange = (e, d) => {
+        console.log(e.target.value)
+        setNewCaption(e.target.value);
+    }
+
+    const handleEdit = (e) => {
+        e.preventDefault();
+        fetch(`api/posts/${props.post.id}`, {
+            method: 'PATCH', 
+            headers:{
+                Authorization: `Bearer ${access_token}`,
+                'Content-Type': 'application/json',
+                'Accept' : 'application/json',
+            },
+            body:JSON.stringify(
+                {caption: newCaption}
+            )
+        })
+        .then(response => response.json())
+        .then(data =>{
+            console.log(data)
+            props.setMore(false)
+        })
     }
 
     return (
@@ -54,7 +78,12 @@ const UpdateCollapse = (props) => {
                     <button className='updateItem' onClick={handleDelete}>Delete</button>
                 </div>                
             </div>)}
-            {isOpenE && (<div>Edit</div>)}
+            {isOpenE && (<div className='deleteConfirmationContainer'>
+                <div className='confirForm updateItem'>
+                    <textarea value={newCaption} className='updateItem'  onChange={handleChange}></textarea>
+                    <button className='updateItem' onClick={handleEdit}>Save</button>
+                </div>
+            </div>)}
 
 
             <div className="updateItem option" onClick={handleToggleE}>Edit</div>

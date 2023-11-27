@@ -77,7 +77,6 @@ class PeopleView(viewsets.ModelViewSet):
 
 
 class PostView(APIView):
-    parser_classes = [MultiPartParser, FormParser]
     def get(self, request):
         posts = Post.objects.all().order_by('-created_at').exclude(is_comment = True)
         serialized_posts = PostSerializer(posts, many=True)  
@@ -102,10 +101,11 @@ class PostView(APIView):
         ob.delete()
 
         return Response(status=status.HTTP_200_OK)
-    def put(self, request):
-        post_id = request.data.get("post_id")
-        ob = Post.objects.get(pk = post_id)
-
+    def patch(self, request, pk):
+        parser_classes = [MultiPartParser, FormParser]
+        ob = Post.objects.get(pk = pk)
+        print(ob)
+        print(request.data)
         serializer = PostSerializer(ob, data= request.data)
 
         if serializer.is_valid():

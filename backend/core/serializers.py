@@ -47,7 +47,7 @@ class RecursiveSerializer(serializers.Serializer):
 
 
 class PostSerializer(serializers.ModelSerializer):
-    media = MediaSerializer(many=True)
+    media = MediaSerializer(many=True, read_only = True)
     creater = UserSerializer(read_only=True)
     comments = RecursiveSerializer(many=True, read_only=True)
 

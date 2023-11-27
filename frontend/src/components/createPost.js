@@ -25,7 +25,6 @@ const CreatePost = (props) => {
       }, [modal]);
     
       useEffect(() => {
-        console.log(modal);
       }, [modal]);
 	
 

@@ -9,6 +9,7 @@ const Home = () => {
     
     const [posts, setPosts] = useState([]);
     const [Loading, setLoading] = useState(true);
+    const [signal, setSignal] = useState(false)
     
     useEffect(() => {
         const fet = () => {
@@ -20,9 +21,9 @@ const Home = () => {
             })
             .catch(error => console.error('Error:', error));
         }   
-        
+        console.log("jjjj")
         fet();
-      },[]);
+      },[signal]);
 
       if(Loading) {
         return (
@@ -38,7 +39,7 @@ const Home = () => {
                     <div className='postsView'>
                         <ul className="postList">
                             {posts.map(post => (
-                                    <Post post={post} key={post.id} posts = {posts} setPosts = {setPosts}/>
+                                    <Post post={post} key={post.id} setSignal = {setSignal} signal = {signal}/>
                             ))}
                         </ul>
                     </div> 

@@ -10,6 +10,7 @@ const Post = (props) => {
     const [isLoading, setIsLoading] = useState(true)
     const [count, setCount] = useState(0)
     const [more, setMore] = useState(false)
+    const [user, setUser] = useState({})
     const access_token = localStorage.getItem("access_token");
 
 
@@ -23,6 +24,7 @@ const Post = (props) => {
             .then((response) => response.json())
             .then((data) => {
                 const is_liked = props.post.liker.includes(data.id)
+                setUser(data)
                 setIsLike(is_liked);
                 setCount(props.post.liker.length)
                 setIsLoading(false)
@@ -37,7 +39,6 @@ const Post = (props) => {
         const squares = document.querySelectorAll('.postsContainer');
         squares.forEach(square => {
           const width = square.offsetWidth;
-          console.log(width)
           square.style.height = width + 'px';
         });
       });
@@ -99,6 +100,9 @@ const Post = (props) => {
         setMore(!more)
     }
 
+    useEffect(() => {
+        props.setSignal(!props.signal)
+    },[more])
     
 
     useEffect(() => {
@@ -123,8 +127,9 @@ const Post = (props) => {
     if(!isLoading) {
         return (
             <div className="postsContainer" id={props.post.id}>
-                <span className="material-symbols-outlined more" onClick={handleMore}>more_horiz</span>
-                {more && <UpdateCollapse post = {props.post} posts = {props.posts} setPosts = {props.setPosts}/> }
+                {user.id === props.post.creater.id && <span className="material-symbols-outlined more" onClick={handleMore}>more_horiz</span>}
+                
+                {more && <UpdateCollapse post = {props.post} setMore = {setMore}/>}
                 <div className="userInfo">
                     <ProfileOpen user = {props.post.creater}/>
                 </div>
