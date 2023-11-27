@@ -95,6 +95,26 @@ class PostView(APIView):
 
         serializer = PostSerializer(post)
         return Response(serializer.data, status=status.HTTP_201_CREATED)
+    def delete(self, request):
+        post_id = request.data.get("post_id")
+        ob = Post.objects.get(pk = post_id)
+        ob.delete()
+
+        return Response(status=status.HTTP_200_OK)
+    def put(self, request):
+        post_id = request.data.get("post_id")
+        ob = Post.objects.get(pk = post_id)
+
+        serializer = PostSerializer(ob, data= request.data)
+
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status= status.HTTP_200_OK)
+
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+        
+
     
 class SinglePost(viewsets.ModelViewSet):
     serializer_class = PostSerializer

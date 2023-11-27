@@ -3,13 +3,13 @@ import '../styles/Home.css'
 import ProfileOpen from './profileOpen';
 import { useState, useEffect } from 'react';
 import CreateComment from "./createComment";
+import UpdateCollapse from "./updateCollapse";
 
 const Post = ({post}) => {
     const [isLike, setIsLike] = useState(null);
     const [isLoading, setIsLoading] = useState(true)
     const [count, setCount] = useState(0)
-    const [isComment, setIsComment] = useState(false)
-    const [formData, setFormData] = useState({"post_id" : post.id, "content" : ""})
+    const [more, setMore] = useState(false)
     const access_token = localStorage.getItem("access_token");
 
 
@@ -92,10 +92,39 @@ const Post = ({post}) => {
     }
 
     // comment
+
+    //update and delete
+
+    const handleMore = () => {
+        setMore(!more)
+    }
+
+    
+
+    useEffect(() => {
+
+          const handleMouseDown = (e) => {
+            if (!e.target.classList.contains('updateItem')) {
+              setMore(false);
+            }
+          };
+    
+          document.addEventListener('mousedown', handleMouseDown);
+    
+          return () => {
+            document.removeEventListener('mousedown', handleMouseDown);
+          };
+        
+      }, []);
+	
+
+    //end update and delete
+
     if(!isLoading) {
         return (
             <div className="postsContainer" id={post.id}>
-                <span class="material-symbols-outlined more">more_horiz</span>
+                <span class="material-symbols-outlined more" onClick={handleMore}>more_horiz</span>
+                {more && <UpdateCollapse post = {post}/>}
                 <div className="userInfo">
                     <ProfileOpen user = {post.creater}/>
                 </div>
@@ -146,33 +175,3 @@ const Post = ({post}) => {
 
 export default Post;
 
-
-
-
-
-{/* <div className='overLay' onClick={haha}>
-                        <div className='createFormContainer c'>
-                            <div className="closePostForm">
-                                <span className="material-symbols-outlined" onClick={haha}>close</span>
-                            </div>
-
-                            <div className='ToSo c'>
-                                <div className='to c'>
-                                    <div className='userInfo'>
-                                        <div className="avatarContainer c">
-                                            <img src={post.creater.avatar.file} alt="avatar" className="avatar c"/>
-                                        </div>
-                                        <div className='c'>{post.creater.username}</div>
-                                    </div>
-                                    
-                                    <div className='c'>{post.caption}</div>
-                                </div>
-                            </div>
-
-                            <div className='typeComment c'>
-                                <textarea className='c caption' rows={1} autoFocus onChange={handleChange} />
-                            </div>
-
-                            <button className='c postBtn' onClick={handleSubmit}>Reply</button>
-                        </div>
-                    </div> */}
