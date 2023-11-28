@@ -10,6 +10,7 @@ const Profile = () => {
     const {userid} = useParams();
     const [posts, setPosts] = useState([])
     const [isLoading, setIsLoading] = useState(true)
+    const [signal, setSignal] = useState(false)
 
     useEffect(() => {
         fetch(`/api/ppost/${userid}`)
@@ -19,7 +20,7 @@ const Profile = () => {
         })
         .catch(error => console.error('Error:', error));
         setIsLoading(false);
-    },[userid])
+    },[userid, signal])
 
     if(isLoading) {
         return (
@@ -35,7 +36,7 @@ const Profile = () => {
                         <div className='postsView'>
                             <ul className="postList">
                                 {posts.map(post => (
-                                        <Post post={post} key={post.id}/>
+                                        <Post post={post} key={post.id} setSignal = {setSignal} signal = {signal}/>
                                 ))}
                             </ul>
                         </div> 

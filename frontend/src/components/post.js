@@ -163,7 +163,7 @@ const Post = (props) => {
                         <div className="love" onClick={isLike ? handleUnlike : handleLike} ><span className="material-symbols-outlined" style={isLike ? style1 : style2} >favorite</span></div>
                     )} 
                     <div>{count}</div>
-                    <CreateComment post= {props.post} />
+                    <CreateComment post= {props.post} signal = {props.signal} setSignal = {props.setSignal}/>
                     <div style={{display : 'flex', alignItems : 'center', position : 'relative'}}>
                         <span style={{position:'absolute', left: '6px', top : '-2px' }}>{props.post.comments.length}</span>
                         <span className="material-symbols-outlined" style={{fontSize:'35px'}}>chat_bubble</span>

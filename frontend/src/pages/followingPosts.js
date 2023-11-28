@@ -1,4 +1,3 @@
-import { useActionData } from "react-router-dom"
 import Navbar from "../components/Navbar"
 import Post from "../components/post"
 import { useState, useEffect } from "react"
@@ -7,6 +6,7 @@ import '../styles/Home.css'
 const FollowingPosts = () => {
     const accessToken = localStorage.getItem('access_token');
     const [posts, setPosts] = useState([])
+    const [signal, setSignal] = useState(false)
 
     useEffect(() => {
         fetch('/api/following/', {
@@ -19,7 +19,7 @@ const FollowingPosts = () => {
             setPosts(data)
         })
         .catch(error => console.error('Error:', error));
-    }, [])
+    }, [signal])
 
     return (
         <div>
@@ -29,7 +29,7 @@ const FollowingPosts = () => {
             <div className='postsView'>
                 <ul className="postList">
                     {posts.map(post => (
-                            <Post post={post} key={post.id}/>
+                           <Post post={post} key={post.id} setSignal = {setSignal} signal = {signal}/>
                     ))}
                 </ul>
             </div>

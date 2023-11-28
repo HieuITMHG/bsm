@@ -153,7 +153,7 @@ class Unfollow(APIView):
 class PersonnalPostView(APIView):
     def get(self, request, userid):
         creater = User.objects.get(pk = userid)
-        posts = Post.objects.filter(creater = creater)
+        posts = Post.objects.filter(creater = creater).exclude(is_comment= True)
         serializer = PostSerializer(posts, many = True)
         return Response(serializer.data, status=status.HTTP_200_OK)
     
@@ -166,7 +166,7 @@ class FollowingPosts(APIView):
         posts = []
 
         for following in followings:
-            posts.extend(following.posts.all())
+            posts.extend(following.posts.all().exclude(is_comment= True))
 
         serializer = PostSerializer(posts, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)

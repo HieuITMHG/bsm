@@ -71,7 +71,7 @@ const CreateComment = (props) => {
         .then(response => response.json())
         .then(data => {
             sethehe(!hehe);
-            props.setPosts(prevPosts => [data, ...prevPosts]);
+            props.setSignal(!props.signal)
         })
         .catch(error => console.error('Error:', error));
     };

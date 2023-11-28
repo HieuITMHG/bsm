@@ -12,8 +12,8 @@ const SinglePost = () => {
     const navigate = useNavigate();
     const [isLike, setIsLike] = useState(null);
     const [count, setCount] = useState(0)
-    const [formData, setFormData] = useState({"post_id" : postid, "content" : ""})
     const access_token = localStorage.getItem("access_token");
+    const [signal, setSignal] = useState(false)
 
     useEffect(() => {
         Promise.all([
@@ -36,7 +36,7 @@ const SinglePost = () => {
         .catch(error => {
             console.error('Error:', error);
         });
-    }, [postid, access_token]);
+    }, [postid, access_token, signal]);
 
 
     const style1 = {
@@ -117,13 +117,13 @@ const SinglePost = () => {
                                 <div className="love" onClick={isLike ? handleUnlike : handleLike} ><span className="material-symbols-outlined" style={isLike ? style1 : style2} >favorite</span></div>
                             )} 
                             <div>{count}</div>
-                            <CreateComment post = {post}/>
+                            <CreateComment post = {post} signal = {signal} setSignal = {setSignal}/>
                         </div>
                     </div>
 
                  <div className="commentView">
                         {post.comments.map(comment => (
-                            <Post post={comment} key={comment.id}/>
+                            <Post post={comment} key={comment.id} signal = {signal} setSignal = {setSignal}/>
                         ))}
                 </div>
               
