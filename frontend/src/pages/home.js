@@ -3,6 +3,7 @@ import Navbar from '../components/Navbar';
 import CreatePost from '../components/createPost';
 import Post from '../components/post';
 import '../styles/Home.css'
+import Chatapp from '../components/chatapp';
 
 
 const Home = () => {
@@ -33,6 +34,7 @@ const Home = () => {
         return (
             <div className='homeContainer'>
                 <Navbar />
+
                 <div className='mainView'>     
                     <CreatePost posts = {posts} setPosts = {setPosts}/>
 
@@ -43,7 +45,13 @@ const Home = () => {
                             ))}
                         </ul>
                     </div> 
+
+                    
                 </div>
+
+                <Chatapp />
+
+                
 
             </div>
         );

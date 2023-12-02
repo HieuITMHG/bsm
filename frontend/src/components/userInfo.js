@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import FollowButton from "./followButton";
 import UploadAvatar from "./uploadAvatar";
+import AddFriendButton from "./addfriendbutton";
 import AutoLink from "./autoLink";
 
 const UserInfo = (props) => {
@@ -117,6 +118,7 @@ const UserInfo = (props) => {
                         <div className="detailContainer">
                             <div><h2>{user.username}</h2></div>
                             {(!loading && user.id != cuser.id)  && <FollowButton user={user} />}
+                            {(!loading && user.id != cuser.id)  && <AddFriendButton user={user} />}
                         </div>
                     </div>
                     <div className="aboutMeContainer t" >  

@@ -1,16 +1,17 @@
 import { useState, useEffect } from "react";
 
-const FollowButton = ({ user }) => {
+const AddFriendButton = ({ user }) => {
   const [userId, setUserId] = useState("");
   const accessToken = localStorage.getItem("access_token");
-  const [action, setAction] = useState(null); // Initialize action as null
+  const [action, setAction] = useState(null); 
+  const [ketket, setKetket] = useState(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const access_token = localStorage.getItem("access_token");
 
     if (access_token) {
-      fetch("http://127.0.0.1:8000/api/user/", {
+      fetch("/api/user/", {
         headers: {
           Authorization: `Bearer ${access_token}`,
         },
@@ -19,9 +20,11 @@ const FollowButton = ({ user }) => {
         .then((data) => {
           setUserId(data.id);
           setLoading(false);
-
+            console.log(data)
           // Check if the user is followed by the logged-in user
-          const isUserFollowed = user.followed_by.includes(data.id);
+          const isUserFollowed = user.addfriend_by.includes(data.id);
+          const isketket = data.addfriend_by.includes(user.id);
+          setKetket(isketket);
           setAction(isUserFollowed);
         })
         .catch((error) => console.error("Error:", error));
@@ -30,13 +33,13 @@ const FollowButton = ({ user }) => {
 
   const handleFollow = (e) => {
     e.preventDefault();
-    fetch("http://127.0.0.1:8000/api/follow/", {
+    fetch("/api/addfriend/", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${accessToken}`,
       },
-      body: JSON.stringify({ id: user.id }),
+      body: JSON.stringify({ aims_id: user.id }),
     })
       .then((response) => response.json())
       .then((data) => {
@@ -48,13 +51,13 @@ const FollowButton = ({ user }) => {
 
   const handleUnfollow = (e) => {
     e.preventDefault();
-    fetch("http://127.0.0.1:8000/api/unfollow/", {
+    fetch("http://127.0.0.1:8000/api/unfriend/", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${accessToken}`,
       },
-      body: JSON.stringify({ id: user.id }),
+      body: JSON.stringify({ aims_id: user.id }),
     })
       .then((response) => response.json())
       .then((data) => {
@@ -67,12 +70,16 @@ const FollowButton = ({ user }) => {
   if (!loading) {
     return (
       <div className="followButton">
-        {(action) !== null && ( // Render button only when action is not null
+        {(action!== null ) && (
           <button
             onClick={action ? handleUnfollow : handleFollow}
             className={`follow_btn ${action  ? "unfollow" : "follow"}`}
           >
-            {(action) ? "Unfollow" : "Follow"}
+            {(action && !ketket) && "Cancel"}
+            {(action && ketket) && "Unfriend"}
+            {(!action && !ketket) && "Add friend"}
+            {(!action && ketket) && "Accept"}
+
           </button>
         )}
       </div>
@@ -81,4 +88,4 @@ const FollowButton = ({ user }) => {
   return null;
 };
 
-export default FollowButton;
+export default AddFriendButton;

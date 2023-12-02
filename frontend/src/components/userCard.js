@@ -2,6 +2,7 @@ import {useState, useEffect} from 'react'
 import '../styles/Home.css'
 import ProfileOpen from './profileOpen';
 import FollowButton from './followButton';
+import AddFriendButton from './addfriendbutton';
 
 const UserCard = ({user}) => {
 
@@ -10,6 +11,7 @@ const UserCard = ({user}) => {
             <ProfileOpen user = {user} />
             <div className="card_body">
                 <FollowButton user={user} />
+                <AddFriendButton user={user} />
             </div>
         </div>
         )

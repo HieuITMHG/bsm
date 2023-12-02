@@ -1,5 +1,5 @@
 from django.urls import path
-from . import views
+from core import views
 from rest_framework import routers
 
 router = routers.DefaultRouter()
@@ -23,4 +23,6 @@ urlpatterns = [
     path('bio/', views.BioView.as_view(), name="bio"),
     path('comment/', views.CommentView.as_view(), name="comment"),
     path('posts/<int:pk>', views.PostView.as_view(), name='updatePost'),
+    path('addfriend/',  views.Addfriend.as_view(), name = 'addfriend'),
+    path('unfriend/', views.Unfriend.as_view(), name = 'unfriend')
 ]+router.urls

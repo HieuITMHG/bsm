@@ -493,3 +493,13 @@ button:hover {
     color: var(--button-collor);
 }
 
+
+/* Chat app */
+.chatAppContainer {
+    background-color: var(--button-collor);
+    width: 350px;
+    height: 100vh;
+    position: fixed;
+    right: 0;
+}
+/* End chat app */

@@ -227,21 +227,6 @@ class Unlike(APIView):
         serializer = PostSerializer(liked_post)
         return Response(serializer.data, status=status.HTTP_200_OK)
     
-# class CommentView(APIView):
-#     permission_classes = [IsAuthenticated]
-    
-#     def post(self, request, format=None):
-#         post_id = request.data.get("post_id")
-#         destination = Post.objects.get(pk=post_id)
-#         content = request.data.get("content")
-#         owner = request.user
-
-#         # Create an instance using the model's manager
-#         comment = Comment.objects.create(owner=owner, destination=destination, content=content)
-
-#         serializer = CommentSerializer(comment)
-
-#         return Response(serializer.data, status=status.HTTP_200_OK)
 
 class BioView(APIView):
     permission_classes = [IsAuthenticated]
@@ -274,3 +259,59 @@ class CommentView(APIView):
 
         serializer = PostSerializer(post)
         return Response(serializer.data, status=status.HTTP_201_CREATED)
+    
+
+class Addfriend(APIView):
+    permission_classes = [IsAuthenticated]
+    def post(self, request):
+        aims_id =  request.data.get("aims_id")
+        target = User.objects.get(pk = aims_id)
+        user = request.user
+        user.addfriend.add(target)
+
+        se_target = UserSerializer(target)
+        addfriend_list = se_target.data.get('addfriend', [])
+
+        print("dfjldsf")
+        print(addfriend_list)
+        print("dfdhf")
+
+        if user in addfriend_list:
+            user.friends.add(target)
+            target.friends.add(user)
+
+            user.save()
+            target.save()
+            return Response({"successful"}, status=status.HTTP_200_OK)
+        elif user not in addfriend_list:
+            user.save()
+            return Response({"successful"}, status=status.HTTP_200_OK)
+        
+        return Response({"fail"}, status= status.HTTP_400_BAD_REQUEST)
+
+class Unfriend(APIView):
+    permission_classes = [IsAuthenticated]
+    def post(self, request):
+        aims_id =  request.data.get("aims_id")
+        target =  UserSerializer(User.objects.get(pk = aims_id)) 
+        addfriend_list = target.data.get('addfriend', [])
+        user = request.user
+        print("dfjldsf")
+        print(addfriend_list)
+        print("dfdhf")
+
+        if user in addfriend_list:
+            target.friends.remove(user)
+            user.friends.remove(target)
+            target.addfriend.remove(user)
+            user.addfriend.remove(target)
+
+            user.save()
+            target.save()
+            return Response({"successful"}, status=status.HTTP_200_OK)
+        elif user not in addfriend_list:
+            user.addfriend.remove(target)
+            user.save()
+            return Response({"successful"}, status=status.HTTP_200_OK)
+        
+        return Response({"fail"}, status=status.HTTP_400_BAD_REQUEST)
