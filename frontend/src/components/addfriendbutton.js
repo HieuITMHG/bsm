@@ -63,6 +63,7 @@ const AddFriendButton = ({ user }) => {
       .then((data) => {
         console.log(data);
         setAction(false); // User is now unfollowed
+        setKetket(data.ketket)
       })
       .catch((error) => console.error("Error:", error));
   };

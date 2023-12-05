@@ -8,13 +8,16 @@ class MediaSerializer(serializers.ModelSerializer):
         fields = ['id', 'file', 'post']
 
 
-
+class FriendSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User  
+        fields = ['id', 'username', 'email']  
 
 class UserSerializer(serializers.ModelSerializer):
     avatar = MediaSerializer(read_only=True)
     email = serializers.EmailField(write_only=True)
     followed_by = serializers.PrimaryKeyRelatedField(many=True, read_only=True)
-    friends = serializers.PrimaryKeyRelatedField(many=True, read_only=True)
+    friends = FriendSerializer(read_only = True, many = True)
     addfriend_by = serializers.PrimaryKeyRelatedField(many=True, read_only=True)
     addfriend = serializers.PrimaryKeyRelatedField(many=True, read_only=True)
     class Meta:

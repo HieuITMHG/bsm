@@ -276,7 +276,7 @@ class Addfriend(APIView):
         print(addfriend_list)
         print("dfdhf")
 
-        if user in addfriend_list:
+        if user.id in addfriend_list:
             user.friends.add(target)
             target.friends.add(user)
 
@@ -293,14 +293,17 @@ class Unfriend(APIView):
     permission_classes = [IsAuthenticated]
     def post(self, request):
         aims_id =  request.data.get("aims_id")
-        target =  UserSerializer(User.objects.get(pk = aims_id)) 
-        addfriend_list = target.data.get('addfriend', [])
+        target = User.objects.get(pk = aims_id)
         user = request.user
+
+        se_target = UserSerializer(target)
+        addfriend_list = se_target.data.get('addfriend', [])
+
         print("dfjldsf")
         print(addfriend_list)
         print("dfdhf")
 
-        if user in addfriend_list:
+        if user.id in addfriend_list:
             target.friends.remove(user)
             user.friends.remove(target)
             target.addfriend.remove(user)
@@ -308,10 +311,10 @@ class Unfriend(APIView):
 
             user.save()
             target.save()
-            return Response({"successful"}, status=status.HTTP_200_OK)
+            return Response({"ketket" : False}, status=status.HTTP_200_OK)
         elif user not in addfriend_list:
             user.addfriend.remove(target)
             user.save()
-            return Response({"successful"}, status=status.HTTP_200_OK)
+            return Response({"ketket" : False}, status=status.HTTP_200_OK)
         
         return Response({"fail"}, status=status.HTTP_400_BAD_REQUEST)
