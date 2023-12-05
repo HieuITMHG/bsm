@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import ChatBox from "./chatbox";
 
 const Chatapp = () => {
     const [loading, setLoading] = useState(true)
@@ -33,8 +34,10 @@ const Chatapp = () => {
                 <input></input>
                 <ul>
                     {
-                        user.friends.map(friend => (
-                            <li key={`f${friend.id}`}>{friend.username}</li>
+                        user.friends.map(friend => (      
+                          <li key={friend.username}>{friend.username}
+                              <ChatBox receiverId = {friend.id} senderId = {user.id} />
+                          </li>                                                  
                         ))
                     }
                 </ul>
