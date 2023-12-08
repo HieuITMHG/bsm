@@ -9,9 +9,10 @@ class MediaSerializer(serializers.ModelSerializer):
 
 
 class FriendSerializer(serializers.ModelSerializer):
+    avatar = MediaSerializer(read_only=True)
     class Meta:
         model = User  
-        fields = ['id', 'username', 'email']  
+        fields = ['id', 'username', 'email', 'avatar']  
 
 class UserSerializer(serializers.ModelSerializer):
     avatar = MediaSerializer(read_only=True)

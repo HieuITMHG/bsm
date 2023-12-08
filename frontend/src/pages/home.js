@@ -28,7 +28,7 @@ const Home = () => {
 
       if(Loading) {
         return (
-            <div>Loading...</div>
+            <div className="spinner-border"></div>
         )
       }else {
         return (

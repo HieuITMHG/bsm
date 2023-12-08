@@ -31,16 +31,12 @@ const Chatapp = () => {
     }else {
         return (
             <div className="chatAppContainer">
-                <input></input>
-                <ul>
-                    {
-                        user.friends.map(friend => (      
-                          <li key={friend.username}>{friend.username}
-                              <ChatBox receiverId = {friend.id} senderId = {user.id} />
-                          </li>                                                  
-                        ))
-                    }
-                </ul>
+              <div className="receiverContainer" style={{height:'50px'}}></div>
+              {
+                user.friends.map(friend => (           
+                  <ChatBox receiver = {friend} sender = {user} key={friend.username}/>                                                
+                ))
+              }
             </div>
         )
     }

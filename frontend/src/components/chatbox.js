@@ -1,23 +1,13 @@
 import React, { useState, useEffect } from 'react';
+import ProfileOpen from './profileOpen';
 
 function ChatBox(props) {
   const [message, setMessage] = useState('');
   const [receivedMessages, setReceivedMessages] = useState([]);
-
-  let a,b;
-
-  if(Number(props.receiverId) < Number(props.senderId) ) {
-    a = props.receiverId;
-    b = props.senderId;
-    console.log(`${a} : ${b}`)
-  }else {
-    a = props.senderId;
-    b = props.receiverId;
-    console.log(`${a} : ${b}`)
-  }
+  const [isOpen, setIsOpen] = useState(false)
 
 
-  let socket = new WebSocket(`ws://localhost:8000/ws/chat/${a}/${b}/`);
+  let socket = new WebSocket(`ws://localhost:8000/ws/chat/${props.sender.id}/${props.receiver.id}/`);
 
   useEffect(() => {
     socket.onopen = () => {
@@ -29,8 +19,6 @@ function ChatBox(props) {
       console.log(data)
       const newMessage = { message: data.content, sender: data.sender, timestamp: data.timestamp };
       setReceivedMessages(prevMessages => [...prevMessages, newMessage]);
-      const te = document.querySelector('.vcl');
-      te.value += data.content + "\n";
     };
 
     return () => {
@@ -47,21 +35,53 @@ function ChatBox(props) {
     setMessage('');
   };
 
+  const handleOpen = () => {
+    setIsOpen(!isOpen)
+  }
+
   return (
-    <div>
-      <div>
-        {receivedMessages.map((msg, index) => (
-          <div key={index}>
-            <p>{msg.sender}: {msg.message}</p>
-          </div>
-        ))}
+    <>
+      {isOpen ? (
+      <div className='chatBoxContainer'>
+        {/* headfer */}
+        <div className='headerChat'>
+          <span className="material-symbols-outlined" onClick={handleOpen}>arrow_back_ios</span>
+          <ProfileOpen user = {props.receiver}/>
+        </div>
+        {/* end header */}
+
+        {/* message area */}
+        {/* end message area */}
+            <div className='messageFieldContainer'>
+
+            </div>
+        {/* enter message */}
+        <div className='sendMessageContainer'>
+          <span className="material-symbols-outlined">attach_file</span>
+          <input type="text" value={message} onChange={(e) => setMessage(e.target.value)} />         
+          <button onClick={sendMessage} style={{ display: 'none' }} id='sendMessageBtn'>Send</button>
+          <label htmlFor='sendMessageBtn' style={{display: 'flex', alignItems:'center', cursor:'pointer'}}>
+            <span class="material-symbols-outlined">send</span>
+          </label>
+        </div>
+        {/* end enter message */}
       </div>
-      <div>
-        <textarea className="vcl"/>
-        <input type="text" value={message} onChange={(e) => setMessage(e.target.value)} />
-        <button onClick={sendMessage}>Send</button>
-      </div>
-    </div>
+      ) : (
+      <div className='receiverContainer' onClick={handleOpen}>
+
+        <div className="avatarContainer">
+            <img src={props.receiver.avatar.file} alt="avatar" className="avatar"/>
+        </div>
+
+        <div className='nameames'>
+          <div className='name'><strong>{props.receiver.username}</strong></div>
+          <div className='lastMes'>this is the latest message...</div>
+        </div>
+
+      </div>  
+      )}
+    </>
+    
   );
 }
 

@@ -10,7 +10,10 @@ class ChatConsumer(WebsocketConsumer):
         self.sender_id = self.scope['url_route']['kwargs']['sender_id']
         self.receiver_id = self.scope['url_route']['kwargs']['receiver_id']
 
-        self.room_name = f'{self.sender_id}_{self.receiver_id}'
+        if self.sender_id < self.receiver_id :
+            self.room_name = f'{self.sender_id}_{self.receiver_id}'
+        else:
+            self.room_name = f'{self.receiver_id}_{self.sender_id}'
 
         async_to_sync(self.channel_layer.group_add)(
             self.room_name,
