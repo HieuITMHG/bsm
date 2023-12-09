@@ -332,7 +332,7 @@
 
 
 .avatarContainer {
-    height: 50x;
+    height: 50px;
     width: 50px;
     border-radius: 50%;
     object-fit: cover;
@@ -554,3 +554,37 @@ button:hover {
 }
 
 /* End chat app */
+
+/* speech bubble */
+
+.messageContainer{
+    width: 100%;
+    display: flex;
+    min-height: 50px;
+    margin: 5px 0px 5px 0px;
+}
+
+.mright {
+    justify-content: flex-end;
+}
+
+.mright .contentContainer {
+    display: flex;
+    justify-content: flex-end;
+}
+
+
+.messageContainer .avatarContainer{
+    width: 13%;
+    height: auto;
+    margin-left: 5px;
+    margin-right: 5px;
+    cursor: auto;
+}
+
+.contentContainer {
+    width: 50%;
+    background-color: white;
+    padding: 5px;
+    border-radius: 20px;
+}

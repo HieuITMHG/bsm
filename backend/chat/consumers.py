@@ -4,6 +4,7 @@ from asgiref.sync import async_to_sync
 from channels.generic.websocket import WebsocketConsumer
 from chat.models import Message
 from core.models import User 
+from chat.serializer import MessageSerializer
 
 class ChatConsumer(WebsocketConsumer):
     def connect(self):
@@ -41,24 +42,26 @@ class ChatConsumer(WebsocketConsumer):
             content = content
         )
 
+        serializer_data  = MessageSerializer(message).data
+
         async_to_sync(self.channel_layer.group_send)(
             self.room_name,
             {
                 'type': 'chat_message',
-                'content': content,
-                'sender': sender.username,
-                'timestamp': str(message.timestamp)
+                'content': serializer_data,
+                # 'sender': sender.username,
+                # 'timestamp': str(message.timestamp)
             }
         )
 
     def chat_message(self, event):
         print("YOU ARE WELCOME")
-        message = event['content']
-        sender = event['sender']
-        timestamp = event['timestamp']
+        content = event['content']
+        # sender = event['sender']
+        # timestamp = event['timestamp']
 
         self.send(text_data=json.dumps({
-            'content' : message,
-            'sender' : sender,
-            'timestamp' : timestamp
+            'content' : content,
+            # 'sender' : sender,
+            # 'timestamp' : timestamp
         }))
