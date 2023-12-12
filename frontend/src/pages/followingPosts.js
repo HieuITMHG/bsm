@@ -1,6 +1,7 @@
 import Navbar from "../components/Navbar"
 import Post from "../components/post"
 import { useState, useEffect } from "react"
+import Chatapp from "../components/chatapp"
 import '../styles/Home.css'
 
 const FollowingPosts = () => {
@@ -26,14 +27,17 @@ const FollowingPosts = () => {
             <Navbar />
             <div className="mainView">
             
-            <div className='postsView'>
-                <ul className="postList">
-                    {posts.map(post => (
-                           <Post post={post} key={post.id} setSignal = {setSignal} signal = {signal}/>
-                    ))}
-                </ul>
+                <div className='postsView'>
+                    <ul className="postList">
+                        {posts.map(post => (
+                            <Post post={post} key={post.id} setSignal = {setSignal} signal = {signal}/>
+                        ))}
+                    </ul>
+                </div>
+
             </div>
-            </div>
+                
+            <Chatapp />
         </div> 
     )
 }

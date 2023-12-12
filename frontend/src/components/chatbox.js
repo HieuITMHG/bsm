@@ -102,7 +102,7 @@ function ChatBox(props) {
   
           <div className='nameames'>
             <div className='name'><strong>{props.receiver.username}</strong></div>
-            <div className='lastMes'  style={{color:'gray'}}>{messages[messages.length-1].content}</div>
+            <div className='lastMes'  style={{color:'gray'}}>{(messages.length != 0) ? messages[messages.length-1].content : ""}</div>
           </div>
   
         </div>  

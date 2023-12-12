@@ -3,6 +3,7 @@ import FollowButton from "./followButton";
 import UploadAvatar from "./uploadAvatar";
 import AddFriendButton from "./addfriendbutton";
 import AutoLink from "./autoLink";
+import { NavLink } from "react-router-dom";
 
 const UserInfo = (props) => {
     const [user, setUser] = useState({});
@@ -119,13 +120,23 @@ const UserInfo = (props) => {
                             <div><h2>{user.username}</h2></div>
                             {(!loading && user.id != cuser.id)  && <FollowButton user={user} />}
                             {(!loading && user.id != cuser.id)  && <AddFriendButton user={user} />}
+
+                            <NavLink to={`/followings/${props.userid}`}>
+                                <div><p>Following: {user.follow.length}</p></div>
+                            </NavLink>
+
+                            <NavLink to={`/followers/${props.userid}`}>
+                                <div><p>Follower: {user.followed_by.length}</p></div>
+                            </NavLink>
+                            
+                            
                         </div>
                     </div>
                     <div className="aboutMeContainer t" >  
                         {
                         (user.id == cuser.id) ? ( 
                             <div className="triggerContainer t" onClick={handleHihi}>{hihi ? (<textarea onChange={handleBioChange} className="t" value={bio}/> ) :
-                                <div className="t trigger">{bio}</div>
+                                <div className="t trigger"><p><AutoLink text={bio}/></p></div>
                             }</div>
                         ) :
                             (<div className="triggerContainer"> {bio} </div>) 

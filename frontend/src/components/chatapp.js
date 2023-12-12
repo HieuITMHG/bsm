@@ -4,6 +4,9 @@ import ChatBox from "./chatbox";
 const Chatapp = () => {
     const [loading, setLoading] = useState(true)
     const [user, setUser] = useState({});
+    const [friends, setFriends] = useState([])
+    const [searchKey, setSearchKey] = useState("")
+    const [filteredFriends, setFilteredFriends] = useState([])
 
     useEffect(() => {
         const access_token = localStorage.getItem("access_token");
@@ -18,11 +21,26 @@ const Chatapp = () => {
             .then((data) => {
               console.log(data)
               setUser(data)
+              setFriends(data.friends)
+              setFilteredFriends(data.friends)
               setLoading(false)
             })
             .catch((error) => console.error("Error:", error));
         }
       }, []);
+
+      const handleChange = (e) => { 
+        const searchTerm = e.target.value;
+
+        setSearchKey(searchTerm)
+    
+        const filteredItems = friends.filter((friend) =>
+          friend.username.toLowerCase().includes(searchTerm.toLowerCase())
+        );
+    
+        setFilteredFriends(filteredItems);
+      }
+    
 
     if(loading) {
         return (
@@ -31,13 +49,22 @@ const Chatapp = () => {
     }else {
         return (
             <div className="chatAppContainer">
-              <div className="receiverContainer" style={{height:'50px'}}></div>
+
+              <div className="searchFriend">
+
+                <input onChange={handleChange}></input>
+                <div className="searchBtn"><span className="material-symbols-outlined">search</span></div>
+                
+              </div>
+
               {
-                user.friends.map(friend => (           
+                filteredFriends.map(friend => (           
                   <ChatBox receiver = {friend} sender = {user} key={friend.username}/>                                                
                 ))
               }
+              <div className="message_input"></div>
             </div>
+            
         )
     }
     

@@ -318,3 +318,25 @@ class Unfriend(APIView):
             return Response({"ketket" : False}, status=status.HTTP_200_OK)
         
         return Response({"fail"}, status=status.HTTP_400_BAD_REQUEST)
+    
+
+class followingView(APIView):
+    def get(self, request, userid):
+        user = User.objects.get(pk = userid)
+        queryset = user.follow.all()
+
+        serializer = UserSerializer(queryset, many = True)
+
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+class followerView(APIView):
+    def get(self, request, userid):
+        user = User.objects.get(pk = userid)
+
+        queryset = user.followed_by.all()
+        
+        serializer = UserSerializer(queryset, many = True)
+
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+

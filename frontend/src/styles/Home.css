@@ -233,6 +233,7 @@
 .displayCaption {
     width: 100%;
     height: auto;
+    max-height: 100%;
     padding: 5px 0 5px 0px;
     border-top: 1px solid gray;
     border-bottom: 1px solid gray;
@@ -240,6 +241,7 @@
     text-decoration: none;
     color: black;
     justify-content: center;
+    object-fit: cover;
 }
 
 .mediaContainer {
@@ -403,21 +405,15 @@
 .triggerContainer {
     height: 100%;
     width: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+    word-wrap: break-word;
 }
 
 .trigger {
-    cursor: pointer;
+    height: 100%;
+    width: 100%;
+    word-wrap: break-word;
 }
 
-
-/* .aboutMeContainer textarea {
-    max-width: 100%;
-    resize: none;
-    border: none;
-} */
 
 
 
@@ -501,6 +497,10 @@ button:hover {
     position: fixed;
     border-left: 1px solid gray;
     right: 0;
+    top: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
 .receiverContainer {
@@ -587,4 +587,28 @@ button:hover {
     background-color: white;
     padding: 5px;
     border-radius: 20px;
+}
+
+.searchFriend {
+    height: 50px;
+    width: 90%;
+    background-color: var(--overlay-collor);
+    border-radius: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.searchBtn {
+    border-radius: 50%;
+    background-color: #f0f2f5;
+    margin-left: 10px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    padding:3px;
+}
+
+.searchBtn:hover {
+    background-color: var(--overlay-collor);
 }

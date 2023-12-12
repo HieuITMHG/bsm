@@ -24,6 +24,7 @@
     justify-content: center;
     align-items: center;
     background-color: rgb(224, 252, 254);
+    max-width:1150px ;
 }
 
 .pictureContainer img, video{    
@@ -76,4 +77,9 @@
 
 .comment {
     width: 100%;
+}
+
+.captionhehe {
+    max-height: 70%;
+    max-width: 70%;
 }

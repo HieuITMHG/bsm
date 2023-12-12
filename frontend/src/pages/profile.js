@@ -3,7 +3,7 @@ import UserInfo from "../components/userInfo";
 import { useParams } from "react-router-dom";
 import { useState, useEffect } from "react";
 import Post from "../components/post";
-import UploadAvatar from "../components/uploadAvatar";
+import Chatapp from "../components/chatapp";
 
 
 const Profile = () => {
@@ -42,6 +42,7 @@ const Profile = () => {
                         </div> 
                     </div>
                 }
+                <Chatapp />
             </>
         )
     }

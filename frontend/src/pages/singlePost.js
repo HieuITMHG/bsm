@@ -103,7 +103,7 @@ const SinglePost = () => {
                             <video src={post.media[0].file} controls alt='video' className="picture" />
                             ) : (
                             <img src={post.media[0].file} alt='image' className="picture" />)
-                            ) : (<div><h1>{post.caption}</h1></div>)}
+                            ) : (<div className="captionhehe"><h1>{post.caption}</h1></div>)}
 </div>
                     
                 

@@ -8,6 +8,9 @@ import SinglePost from './pages/singlePost';
 import FollowingPosts from './pages/followingPosts';
 import UploadAvatar from './components/uploadAvatar';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import FollowingsView from './pages/followingsView';
+import FollowersView from './pages/followersView';
+
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
 
 function App() {
@@ -83,6 +86,8 @@ function App() {
           <Route path='/following' element={<FollowingPosts />} />
           <Route path='hehe' element={<UploadAvatar />} />
           <Route path='/post/:postid' element={<SinglePost />} />
+          <Route path='/followings/:userid' element={<FollowingsView />} />
+          <Route path='/followers/:userid' element = {<FollowersView />} />
         </Routes>
     </div>
   );
