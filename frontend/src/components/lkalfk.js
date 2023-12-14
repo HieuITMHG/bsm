@@ -1,17 +1,29 @@
-import React from 'react';
+import React, { useState } from 'react';
 
-function FlexContainerExample() {
-    return (
-        <div style={{ display: 'flex', flexDirection: 'column', height: '300px', overflowY: 'auto' }}>
-          {/* Many items */}
-          {Array.from({ length: 20 }, (_, index) => (
-            <div key={index} style={{ padding: '10px', border: '1px solid #ccc' }}>
-              Item {index + 1}
-            </div>
-          ))}
-        </div>
-      );
-    
+function MyComponent() {
+  const [inputValue, setInputValue] = useState('');
+
+  const handleInputChange = (event) => {
+    // Sử dụng onChange
+    setInputValue(event.target.value);
+    console.log("Giá trị đã thay đổi: ", event.target.value);
+  };
+
+  const handleInputInput = (event) => {
+    // Sử dụng onInput
+    setInputValue(event.target.value);
+    console.log("Giá trị thay đổi ngay lập tức: ", event.target.value);
+  };
+
+  return (
+    <div>
+      {/* Sử dụng onChange */}
+      <input type="text" value={inputValue} onChange={handleInputChange} />
+
+      {/* Sử dụng onInput */}
+      <input type="text" value={inputValue} onInput={handleInputInput} />
+    </div>
+  );
 }
 
-export default FlexContainerExample;
+export default MyComponent;

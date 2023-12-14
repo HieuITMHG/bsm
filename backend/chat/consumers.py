@@ -32,36 +32,54 @@ class ChatConsumer(WebsocketConsumer):
     def receive(self, text_data):
         print("BIG FAN SIR")
         data_json = json.loads(text_data)
-        content = data_json['content']
-        sender = User.objects.get(pk = self.sender_id )
-        receiver = User.objects.get(pk=self.receiver_id)
+        type = data_json['type']
+        if type == "chat_message":       
+            content = data_json['content']        
+            sender = User.objects.get(pk = self.sender_id )
+            receiver = User.objects.get(pk=self.receiver_id)
 
-        message = Message.objects.create(
-            sender = sender,
-            receiver = receiver,
-            content = content
-        )
+            message = Message.objects.create(
+                sender = sender,
+                receiver = receiver,
+                content = content
+            )
 
-        serializer_data  = MessageSerializer(message).data
+            serializer_data  = MessageSerializer(message).data
 
-        async_to_sync(self.channel_layer.group_send)(
-            self.room_name,
-            {
-                'type': 'chat_message',
-                'content': serializer_data,
-                # 'sender': sender.username,
-                # 'timestamp': str(message.timestamp)
-            }
-        )
+            async_to_sync(self.channel_layer.group_send)(
+                self.room_name,
+                {
+                    'type': type,
+                    'content': serializer_data,
+                }
+            )
+        elif type == "update":
+            typing_status = data_json['typing_status']
+            who = data_json['who']
+            async_to_sync(self.channel_layer.group_send)(
+                self.room_name,
+                {
+                    'type': type,
+                    'typing_status': typing_status,
+                    'who' : who
+                }
+            )
+
 
     def chat_message(self, event):
         print("YOU ARE WELCOME")
         content = event['content']
-        # sender = event['sender']
-        # timestamp = event['timestamp']
-
         self.send(text_data=json.dumps({
             'content' : content,
-            # 'sender' : sender,
-            # 'timestamp' : timestamp
+            'type' : 'chat_message'
+        }))
+
+    def update(self,event):
+        print("update typing status")
+        typing_status = event['typing_status']
+        who = event['who']
+        self.send(text_data=json.dumps({
+            'type' : 'update',
+            'typing_status' : typing_status,
+            'who' : who
         }))

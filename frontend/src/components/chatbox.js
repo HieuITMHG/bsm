@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import ProfileOpen from './profileOpen';
 import Message from './message';
+import { json } from 'react-router-dom';
 
 function ChatBox(props) {
   const [message, setMessage] = useState('');
@@ -8,9 +9,26 @@ function ChatBox(props) {
   const [isOpen, setIsOpen] = useState(false)
   const [messages, setMessages] =  useState([])
   const [isLoading, setIsLoading] = useState(true)
-
+  const [di, setDi] = useState(false)
+  const [isSend, setIsSend] = useState(false)
 
   let socket = new WebSocket(`ws://localhost:8000/ws/chat/${props.sender.id}/${props.receiver.id}/`);
+
+  const handleInputChange = (e) => {
+    const val = e.target.value;
+    console.log(val)
+    if(val.length != 0) {
+      if(!isSend) {
+        socket.send(JSON.stringify({type : 'update', typing_status: true, who : props.sender.id}));
+        setIsSend(true)
+      }
+      
+    }else {
+      socket.send(JSON.stringify({type : 'update', typing_status: false, who: props.sender.id }))
+      setIsSend(false)
+    }
+    
+  }
 
   useEffect(() => {
     socket.onopen = () => {
@@ -20,7 +38,18 @@ function ChatBox(props) {
     socket.onmessage = (event) => {
       const data = JSON.parse(event.data);
       console.log(data)
-      setReceivedMessages(prevMessages => [...prevMessages, data.content]);
+      if(data.type == "update") {
+        if((data.typing_status == true) && (data.who == props.receiver.id)) {
+            setDi(true)        
+        }else if ((data.typing_status == false) && (data.who == props.receiver.id)) {
+            setDi(false)                
+        }
+      }
+      else if(data.type == "chat_message") {
+        setReceivedMessages(prevMessages => [...prevMessages, data.content]);
+      }
+      
+
     };
 
     return () => {
@@ -50,6 +79,7 @@ function ChatBox(props) {
   const sendMessage = () => {
     const data = {
       content: message,
+      type: 'chat_message'
     };
     socket.send(JSON.stringify(data));
     setMessage('');
@@ -60,6 +90,7 @@ function ChatBox(props) {
   }
 
   if(!isLoading) {
+    
     return (
       <>
         {isOpen ? (
@@ -80,11 +111,12 @@ function ChatBox(props) {
                   {receivedMessages.map(mes => (
                     <Message message = {mes} key={`m_${mes.id}`} user = {props.sender}/>
                   ))}
+                  {di && <div className='typing_indicator'>ooo</div> }
               </div>
           {/* enter message */}
           <div className='sendMessageContainer'>
             <span className="material-symbols-outlined">attach_file</span>
-            <input type="text" value={message} onChange={(e) => setMessage(e.target.value)} />         
+            <input type="text" value={message} onChange={(e) => setMessage(e.target.value)} className='message_input' onInput={handleInputChange}/>         
             <button onClick={sendMessage} style={{ display: 'none' }} id='sendMessageBtn'>Send</button>
             <label htmlFor='sendMessageBtn' style={{display: 'flex', alignItems:'center', cursor:'pointer'}}>
               <span className="material-symbols-outlined">send</span>
