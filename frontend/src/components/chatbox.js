@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import ProfileOpen from './profileOpen';
 import Message from './message';
-import { json } from 'react-router-dom';
 
 function ChatBox(props) {
+  console.log("render");
   const [message, setMessage] = useState('');
   const [receivedMessages, setReceivedMessages] = useState([]);
   const [isOpen, setIsOpen] = useState(false)
@@ -11,52 +11,63 @@ function ChatBox(props) {
   const [isLoading, setIsLoading] = useState(true)
   const [di, setDi] = useState(false)
   const [isSend, setIsSend] = useState(false)
+  const [socket, setSocket] = useState(null);
 
-  let socket = new WebSocket(`ws://localhost:8000/ws/chat/${props.sender.id}/${props.receiver.id}/`);
+  useEffect(() => {
+    // Kiểm tra nếu WebSocket chưa được khởi tạo
+    if (!socket) {
+      const newSocket = new WebSocket(`ws://localhost:8000/ws/chat/${props.sender.id}/${props.receiver.id}/`);
+      
+      newSocket.onopen = () => {
+        console.log('WebSocket connected');
+      };
 
+      newSocket.onmessage = (event) => {
+        const data = JSON.parse(event.data);
+        console.log(data)
+        if(data.type == "update") {
+          console.log("lkdsld")
+          if((data.typing_status == true) && (data.who == props.receiver.id)) {
+              setDi(true)        
+          }else if ((data.typing_status == false) && (data.who == props.receiver.id)) {
+              setDi(false)                
+          }
+        }
+        else if(data.type == "chat_message") {
+          setReceivedMessages(prevMessages => [...prevMessages, data.content]);
+          setDi(false);
+        }
+    }
+
+      setSocket(newSocket); // Lưu WebSocket vào state
+    }
+
+    return () => {
+      if (socket) {
+        socket.close();
+      }
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [socket, props.sender.id, props.receiver.id]);
+  
+  
   const handleInputChange = (e) => {
+
     const val = e.target.value;
-    console.log(val)
     if(val.length != 0) {
       if(!isSend) {
+        console.log("on");
         socket.send(JSON.stringify({type : 'update', typing_status: true, who : props.sender.id}));
-        setIsSend(true)
-      }
-      
+        setIsSend(true) 
+      } 
     }else {
-      socket.send(JSON.stringify({type : 'update', typing_status: false, who: props.sender.id }))
-      setIsSend(false)
+        console.log("off");
+        socket.send(JSON.stringify({type : 'update', typing_status: false, who: props.sender.id }))
+        setIsSend(false)
+      
     }
     
   }
-
-  useEffect(() => {
-    socket.onopen = () => {
-      console.log('WebSocket connected');
-    };
-
-    socket.onmessage = (event) => {
-      const data = JSON.parse(event.data);
-      console.log(data)
-      if(data.type == "update") {
-        if((data.typing_status == true) && (data.who == props.receiver.id)) {
-            setDi(true)        
-        }else if ((data.typing_status == false) && (data.who == props.receiver.id)) {
-            setDi(false)                
-        }
-      }
-      else if(data.type == "chat_message") {
-        setReceivedMessages(prevMessages => [...prevMessages, data.content]);
-      }
-      
-
-    };
-
-    return () => {
-      socket.close();
-    };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
 
   useEffect(() => {
     const access_token = localStorage.getItem("access_token");
@@ -83,6 +94,7 @@ function ChatBox(props) {
     };
     socket.send(JSON.stringify(data));
     setMessage('');
+    setIsOpen(true)
   };
 
   const handleOpen = () => {
