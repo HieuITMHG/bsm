@@ -11,6 +11,10 @@ class ChatConsumer(WebsocketConsumer):
         self.sender_id = self.scope['url_route']['kwargs']['sender_id']
         self.receiver_id = self.scope['url_route']['kwargs']['receiver_id']
 
+        onliner = User.objects.get(pk = self.sender_id)
+        onliner.online_status = True
+        onliner.save()
+
         if self.sender_id < self.receiver_id :
             self.room_name = f'{self.sender_id}_{self.receiver_id}'
         else:
@@ -22,12 +26,36 @@ class ChatConsumer(WebsocketConsumer):
         )
 
         self.accept()
+
+        async_to_sync(self.channel_layer.group_send)(
+            self.room_name,
+            {
+                'type' : 'online_status',
+                'online_status' :True,
+                'onliner_id' : self.sender_id
+            }
+        )
     
     def disconnect(self, close_code):
+
+        onliner = User.objects.get(pk = self.sender_id)
+        onliner.online_status = False
+        onliner.save()
+
+        async_to_sync(self.channel_layer.group_send)(
+            self.room_name,
+            {
+                'type' : 'online_status',
+                'online_status' :False,
+                'onliner_id' : self.sender_id
+            }
+        )
+
         async_to_sync(self.channel_layer.group_discard)(
             self.room_name,
             self.channel_name
         )
+
 
     def receive(self, text_data):
         print("BIG FAN SIR")
@@ -82,4 +110,14 @@ class ChatConsumer(WebsocketConsumer):
             'type' : 'update',
             'typing_status' : typing_status,
             'who' : who
+        }))
+
+    def online_status(self, event):
+        print("Online Status")
+        online_status = event['online_status']
+        onliner_id = event['onliner_id']
+        self.send(text_data=json.dumps({
+            'type' : 'online_status',
+            'online_status': online_status,
+            'onliner_id' : onliner_id
         }))

@@ -8,7 +8,7 @@ const AutoLink = ({ text }) => {
           if (match) {
             const url = match[0];
             return (
-              <a href={url.startsWith('http') ? url : `http://${url}`}>{url}</a>
+              <a href={url.startsWith('http') ? url : `http://${url}`} key={word}>{url}</a>
             );
           }
           return word;

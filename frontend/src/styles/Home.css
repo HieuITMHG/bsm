@@ -409,9 +409,11 @@
 }
 
 .trigger {
-    height: 100%;
     width: 100%;
     word-wrap: break-word;
+}
+.trigger p {
+    width: 100%;
 }
 
 
@@ -560,19 +562,18 @@ button:hover {
 .messageContainer{
     width: 100%;
     display: flex;
-    min-height: 50px;
     margin: 5px 0px 5px 0px;
+    word-wrap: break-word;
 }
 
 .mright {
     justify-content: flex-end;
 }
 
-.mright .contentContainer {
+.mright .contentContainer p{
     display: flex;
     justify-content: flex-end;
 }
-
 
 .messageContainer .avatarContainer{
     width: 13%;
@@ -587,6 +588,11 @@ button:hover {
     background-color: white;
     padding: 5px;
     border-radius: 20px;
+    max-width: 80%;
+}
+
+.contentContainer p {
+    width: 100%;
 }
 
 .searchFriend {

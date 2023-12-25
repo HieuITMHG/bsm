@@ -12,7 +12,7 @@ class FriendSerializer(serializers.ModelSerializer):
     avatar = MediaSerializer(read_only=True)
     class Meta:
         model = User  
-        fields = ['id', 'username', 'email', 'avatar']  
+        fields = ['id', 'username', 'email', 'avatar','online_status']  
 
 class UserSerializer(serializers.ModelSerializer):
     avatar = MediaSerializer(read_only=True)
@@ -23,7 +23,7 @@ class UserSerializer(serializers.ModelSerializer):
     addfriend = serializers.PrimaryKeyRelatedField(many=True, read_only=True)
     class Meta:
         model = User
-        fields = ['id', 'username', 'email', 'password', 'follow', 'followed_by', 'avatar', 'aboutme', 'friends', 'addfriend_by', 'addfriend']
+        fields = ['id', 'username', 'email', 'password', 'follow', 'followed_by', 'avatar', 'aboutme', 'friends', 'addfriend_by', 'addfriend', 'online_status']
 
         extra_kwargs = {
             'password' : {'write_only' : True},

@@ -28,7 +28,7 @@ const Message = (props) => {
                 )}
                 
                 <div className="contentContainer">
-                    {props.message.content}
+                    <p>{props.message.content}</p>
                 </div>
 
             </div>

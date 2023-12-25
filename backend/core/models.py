@@ -8,6 +8,7 @@ class User(AbstractUser):
     friends = models.ManyToManyField('self', blank=True)
     avatar = models.ForeignKey('Media', blank=True, null=True, on_delete=models.CASCADE, related_name='post_avatar', default=80)
     aboutme = models.CharField(max_length=100, default="About me", blank=True)
+    online_status = models.BooleanField(default = False)
     def __str__(self):
         return self.username
     

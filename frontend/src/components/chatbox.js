@@ -12,7 +12,8 @@ function ChatBox(props) {
   const [di, setDi] = useState(false)
   const [isSend, setIsSend] = useState(false)
   const [socket, setSocket] = useState(null);
-
+  const [isOnline, setIsOnline] = useState(props.receiver.online_status)
+  console.log(props.receiver)
   useEffect(() => {
     // Kiểm tra nếu WebSocket chưa được khởi tạo
     if (!socket) {
@@ -36,6 +37,13 @@ function ChatBox(props) {
         else if(data.type == "chat_message") {
           setReceivedMessages(prevMessages => [...prevMessages, data.content]);
           setDi(false);
+        }else if(data.type == "online_status") {
+          console.log("online");
+          if(data.online_status == true && data.onliner_id == props.receiver.id) {
+              setIsOnline(true);
+          }else if(data.online_status ==false && data.onliner_id == props.receiver.id) {
+              setIsOnline(false)
+          }
         }
     }
 
@@ -101,6 +109,10 @@ function ChatBox(props) {
     setIsOpen(!isOpen)
   }
 
+  const onlineStyle = {
+    color: 'green'
+  };
+
   if(!isLoading) {
     
     return (
@@ -111,6 +123,7 @@ function ChatBox(props) {
           <div className='headerChat'>
             <span className="material-symbols-outlined" onClick={handleOpen}>arrow_back_ios</span>
             <ProfileOpen user = {props.receiver}/>
+            <span className="material-symbols-outlined" style={isOnline ? onlineStyle : null}>fiber_manual_record</span>
           </div>
           {/* end header */}
   
@@ -148,7 +161,7 @@ function ChatBox(props) {
             <div className='name'><strong>{props.receiver.username}</strong></div>
             <div className='lastMes'  style={{color:'gray'}}>{(messages.length != 0) ? messages[messages.length-1].content : ""}</div>
           </div>
-  
+          <span className="material-symbols-outlined" style={isOnline ? onlineStyle : null}>fiber_manual_record</span>
         </div>  
         )}
       </>
