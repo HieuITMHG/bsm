@@ -20,22 +20,9 @@ function App() {
   const [isLoading, setIsLoading] = useState(true); 
  
   const checkTokenValidity = async () => {
-    console.log("check access")
-      const accessToken = localStorage.getItem('access_token');
+    console.log("refresh")
       const refreshToken = localStorage.getItem('refresh_token');
-      if (accessToken) {
         try {
-          const response = await fetch('http://127.0.0.1:8000/api/token/verify/', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-              'Authorization': `Bearer ${accessToken}`
-            },
-            body: JSON.stringify({ token: accessToken })
-          });
-  
-          if (!response.ok) {
-            console.log("access het han");
             const refreshResponse = await fetch('/api/token/refresh/', {
               method: 'POST',
               headers: {
@@ -53,11 +40,10 @@ function App() {
             } else {
               navigate('/login');
             }
-          }
         } catch (error) {
           console.error('Error:', error);
         }
-      }
+    
       
       setIsLoading(false);
   };
@@ -65,7 +51,7 @@ function App() {
 
   useEffect(() => {
     checkTokenValidity();
-    setInterval(checkTokenValidity, 800000);
+    setInterval(checkTokenValidity, 780000);
 
     return () => {
         clearInterval(checkTokenValidity);

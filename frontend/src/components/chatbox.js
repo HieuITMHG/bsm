@@ -13,7 +13,8 @@ function ChatBox(props) {
   const [isSend, setIsSend] = useState(false)
   const [socket, setSocket] = useState(null);
   const [isOnline, setIsOnline] = useState(props.receiver.online_status)
-  console.log(props.receiver)
+  const [deletedMessages, setDeletedMessages] = useState([])
+
   useEffect(() => {
     // Kiểm tra nếu WebSocket chưa được khởi tạo
     if (!socket) {
@@ -44,6 +45,8 @@ function ChatBox(props) {
           }else if(data.online_status ==false && data.onliner_id == props.receiver.id) {
               setIsOnline(false)
           }
+        }else if (data.type == "delete") {
+            setDeletedMessages(prevDeletedMessages => [...prevDeletedMessages, data.message_id])
         }
     }
 
@@ -131,10 +134,14 @@ function ChatBox(props) {
           {/* end message area */}
               <div className='messageFieldContainer'>
                   {messages.map(mes => (
-                    <Message message = {mes} key={`m_${mes.id}`} user = {props.sender}/>
+                    <>
+                      {!(deletedMessages.includes(mes.id)) && <Message message = {mes} key={`m_${mes.id}`} user = {props.sender} socket = {socket}/>}
+                    </>                   
                   ))}
                   {receivedMessages.map(mes => (
-                    <Message message = {mes} key={`m_${mes.id}`} user = {props.sender}/>
+                    <>
+                      {!(deletedMessages.includes(mes.id)) && <Message message = {mes} key={`m_${mes.id}`} user = {props.sender} socket = {socket}/>}
+                    </> 
                   ))}
                   {di && <div className='typing_indicator'>ooo</div> }
               </div>

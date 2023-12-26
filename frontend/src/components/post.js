@@ -11,8 +11,18 @@ const Post = (props) => {
     const [count, setCount] = useState(0)
     const [more, setMore] = useState(false)
     const [user, setUser] = useState({})
+    const [morec, setMorec] = useState(false)
+    const [caption, setCaption] = useState(null)
     const access_token = localStorage.getItem("access_token");
 
+    const handleMore = () => {
+        setMore(!more)
+    }
+
+    
+    const handleMorec = () => {
+        setMorec(!morec)
+      }
 
     useEffect(() => {
         if (access_token) {
@@ -34,14 +44,12 @@ const Post = (props) => {
         
       }, []);
 
+    const squares = document.querySelectorAll('.mediaContainer');
+    squares.forEach(square => {
+        const width = square.offsetWidth;
+        square.style.height = width + 'px';
+    });
 
-      useEffect(() => {
-        const squares = document.querySelectorAll('.postsContainer');
-        squares.forEach(square => {
-          const width = square.offsetWidth;
-          square.style.height = width + 'px';
-        });
-      });
 
 
     const style1 = {
@@ -96,9 +104,7 @@ const Post = (props) => {
 
     //update and delete
 
-    const handleMore = () => {
-        setMore(!more)
-    }
+    
 
     useEffect(() => {
         props.setSignal(!props.signal)
@@ -120,7 +126,7 @@ const Post = (props) => {
           };
         
       }, []);
-	
+
 
     //end update and delete
 
@@ -134,9 +140,23 @@ const Post = (props) => {
                     <ProfileOpen user = {props.post.creater}/>
                 </div>
                 
-                <NavLink className='displayCaption' to={`/post/${props.post.id}`}>
-                    <div>{props.post.caption}</div>
-                </NavLink>
+                <div className='displayCaption'>
+                    {
+                        props.post.caption.length < 125 ? (<NavLink to={`/post/${props.post.id}`}>{props.post.caption}</NavLink>) :
+                        <>
+                            {morec ?
+                            <>
+                                <NavLink to={`/post/${props.post.id}`}>{props.post.caption}</NavLink>
+                                <p style={{color : 'gray',fontSize:'15px'}} onClick={handleMorec}>hide</p>
+                            </> :
+                            <>
+                                <NavLink to={`/post/${props.post.id}`}>{props.post.caption.substring(0,125)}</NavLink>             
+                                <p style={{color : 'gray', fontSize:'15px'}} onClick={handleMorec}>more</p>
+                            </> 
+                             }
+                        </>
+                    }
+                </div>
                 
                 {props.post.media.length != 0 && 
                     (
@@ -152,7 +172,7 @@ const Post = (props) => {
                                 </div>         
                             ))
                         }
-                </NavLink>
+                        </NavLink>
                     )
                 }
                 

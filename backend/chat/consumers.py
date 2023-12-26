@@ -92,6 +92,17 @@ class ChatConsumer(WebsocketConsumer):
                     'who' : who
                 }
             )
+        elif type == "delete":
+            message_id = data_json['message_id']
+            message = Message.objects.get(pk = message_id)
+            message.delete()
+            async_to_sync(self.channel_layer.group_send)(
+                self.room_name,
+                {
+                    'type': type,
+                    'message_id': message_id
+                }
+            )
 
 
     def chat_message(self, event):
@@ -120,4 +131,11 @@ class ChatConsumer(WebsocketConsumer):
             'type' : 'online_status',
             'online_status': online_status,
             'onliner_id' : onliner_id
+        }))
+    
+    def delete(self, event):
+        message_id = event['message_id']
+        self.send(text_data=json.dumps({
+            'message_id' : message_id,
+            'type': 'delete'
         }))
