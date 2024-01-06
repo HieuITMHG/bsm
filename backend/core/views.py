@@ -7,6 +7,7 @@ from .serializers import UserSerializer, PostSerializer, FollowSerializer
 from rest_framework.permissions import IsAuthenticated
 from rest_framework import viewsets, status,permissions
 from core.models import User, Post, Media
+from chat.models import GroupChat
 from rest_framework.parsers import MultiPartParser, FormParser
 import os
 from django.conf import settings
@@ -35,8 +36,6 @@ class RegisterView(APIView):
 
 
 class LoginView(APIView):
-    permission_classes = (AllowAny,)
-
     def post(self, request):
         username = request.data.get('username')
         password = request.data.get('password')
@@ -55,7 +54,7 @@ class LoginView(APIView):
 class LogoutView(APIView):
     def post(self, request):
         refresh_token = request.data.get('refresh_token')
-
+        print(refresh_token)
         try:
             RefreshToken(refresh_token).blacklist()
             return Response({'message': 'Successfully logged out.'}, status=200)
@@ -272,13 +271,19 @@ class Addfriend(APIView):
         se_target = UserSerializer(target)
         addfriend_list = se_target.data.get('addfriend', [])
 
-        print("dfjldsf")
-        print(addfriend_list)
-        print("dfdhf")
-
         if user.id in addfriend_list:
             user.friends.add(target)
             target.friends.add(user)
+            subname =  ""
+            if user.id < target.id:
+                subname =  f"{user.id}_{target.id}"
+            else:
+                subname = f"{target.id}_{user.id}"
+            groupName = f"group_name_{subname}"
+            groupChat = GroupChat.objects.create(groupName = groupName)
+            groupChat.participants.add(user)
+            groupChat.participants.add(target)
+            groupChat.save()
 
             user.save()
             target.save()
@@ -299,15 +304,21 @@ class Unfriend(APIView):
         se_target = UserSerializer(target)
         addfriend_list = se_target.data.get('addfriend', [])
 
-        print("dfjldsf")
-        print(addfriend_list)
-        print("dfdhf")
-
         if user.id in addfriend_list:
             target.friends.remove(user)
             user.friends.remove(target)
             target.addfriend.remove(user)
             user.addfriend.remove(target)
+
+            subname =  ""
+            if user.id < target.id:
+                subname =  f"{user.id}_{target.id}"
+            else:
+                subname = f"{target.id}_{user.id}"
+            groupName = f"group_name_{subname}"
+
+            groupChat = GroupChat.objects.get(groupName = groupName)
+            groupChat.delete()
 
             user.save()
             target.save()

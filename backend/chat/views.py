@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from rest_framework import viewsets, status
 from rest_framework.views import APIView
-from chat.models import Message
+from chat.models import Message, GroupChat
 from chat.serializer import MessageSerializer
 from core.models import User
 from rest_framework.permissions import IsAuthenticated
@@ -12,12 +12,15 @@ class MessageView(APIView):
     # permission_classes = [IsAuthenticated]
     def get(self, request, receiverId):
         receiver = User.objects.get(pk = receiverId)
-        combined_query = (
-            Q(sender=request.user, receiver=receiverId) | 
-            Q(sender=receiverId, receiver=request.user)
-        )
+        subname =  ""
+        if request.user.id < receiver.id:
+            subname =  f"{request.user.id}_{receiver.id}"
+        else:
+            subname = f"{receiver.id}_{request.user.id}"
+        groupName = f"group_name_{subname}"
+        groupChat = GroupChat.objects.get(groupName = groupName)
 
-        queryset = Message.objects.filter(combined_query).order_by('timestamp')
+        queryset = groupChat.messages.all()
 
         serializer= MessageSerializer(queryset, many=True)
 

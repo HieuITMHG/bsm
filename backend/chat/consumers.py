@@ -2,59 +2,37 @@
 import json
 from asgiref.sync import async_to_sync
 from channels.generic.websocket import WebsocketConsumer
-from chat.models import Message
+from chat.models import Message, GroupChat
 from core.models import User 
 from chat.serializer import MessageSerializer
+from django.db.models import Q
 
 class ChatConsumer(WebsocketConsumer):
     def connect(self):
-        self.sender_id = self.scope['url_route']['kwargs']['sender_id']
-        self.receiver_id = self.scope['url_route']['kwargs']['receiver_id']
+        self.user = self.scope['user']
 
-        onliner = User.objects.get(pk = self.sender_id)
-        onliner.online_status = True
-        onliner.save()
+        print(self.user)
 
-        if self.sender_id < self.receiver_id :
-            self.room_name = f'{self.sender_id}_{self.receiver_id}'
-        else:
-            self.room_name = f'{self.receiver_id}_{self.sender_id}'
+        group_list = GroupChat.objects.filter(participants = self.user.id)
 
-        async_to_sync(self.channel_layer.group_add)(
-            self.room_name,
-            self.channel_name
-        )
+        for group in group_list:
+            async_to_sync(self.channel_layer.group_add)(
+                group.groupName,
+                self.channel_name
+            )
 
         self.accept()
 
-        async_to_sync(self.channel_layer.group_send)(
-            self.room_name,
-            {
-                'type' : 'online_status',
-                'online_status' :True,
-                'onliner_id' : self.sender_id
-            }
-        )
     
     def disconnect(self, close_code):
 
-        onliner = User.objects.get(pk = self.sender_id)
-        onliner.online_status = False
-        onliner.save()
+        group_list = GroupChat.objects.filter(participants = self.user)
 
-        async_to_sync(self.channel_layer.group_send)(
-            self.room_name,
-            {
-                'type' : 'online_status',
-                'online_status' :False,
-                'onliner_id' : self.sender_id
-            }
-        )
-
-        async_to_sync(self.channel_layer.group_discard)(
-            self.room_name,
-            self.channel_name
-        )
+        for group in group_list:
+            async_to_sync(self.channel_layer.group_discard)(
+                group.groupName,
+                self.channel_name
+            )
 
 
     def receive(self, text_data):
@@ -62,20 +40,26 @@ class ChatConsumer(WebsocketConsumer):
         data_json = json.loads(text_data)
         type = data_json['type']
         if type == "chat_message":       
-            content = data_json['content']        
-            sender = User.objects.get(pk = self.sender_id )
-            receiver = User.objects.get(pk=self.receiver_id)
+            content = data_json['content']    
+            receiver_id = data_json['receiver_id']    
+            receiver = User.objects.get(pk=receiver_id)
 
             message = Message.objects.create(
-                sender = sender,
+                sender = self.user,
                 receiver = receiver,
                 content = content
             )
 
             serializer_data  = MessageSerializer(message).data
+            
+            groupChat = GroupChat.objects.filter( Q(participants=self.user) & Q(participants=receiver))
 
+            groupChat.messages.add(message)
+
+            groupChat.save()
+            
             async_to_sync(self.channel_layer.group_send)(
-                self.room_name,
+                groupChat.groupName,
                 {
                     'type': type,
                     'content': serializer_data,

@@ -3,7 +3,7 @@ from core.serializers import UserSerializer
 from chat.models import Message
 
 class MessageSerializer(serializers.ModelSerializer):
-    receiver = UserSerializer(read_only = True)
+    receiver = serializers.PrimaryKeyRelatedField(many=True, read_only=True)
     sender = UserSerializer(read_only = True)
     class Meta:
         model = Message
