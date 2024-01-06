@@ -43,14 +43,14 @@ const UpdateCollapse = (props) => {
     }
 
 
-    const handleChange = (e, d) => {
-        console.log(e.target.value)
-        setNewCaption(e.target.value);
+    const handleChange = (e) => {
+        console.log(e.target.textContent)
+        setNewCaption(e.target.textContent);
     }
 
     const handleEdit = (e) => {
         e.preventDefault();
-        fetch(`api/posts/${props.post.id}`, {
+        fetch(`api/posts/${props.post.id}/`, {
             method: 'PATCH', 
             headers:{
                 Authorization: `Bearer ${access_token}`,
@@ -80,16 +80,17 @@ const UpdateCollapse = (props) => {
             </div>)}
             {isOpenE && (<div className='deleteConfirmationContainer'>
                 <div className='confirForm updateItem'>
-                    <textarea value={newCaption} className='updateItem'  onChange={handleChange}></textarea>
-                    <button className='updateItem' onClick={handleEdit}>Save</button>
+                    <span onInput={handleChange} role="textbox" className="caption updateItem" rows={1} contentEditable autoFocus></span>
+                    <button className='updateItem updateBtn' onClick={handleEdit}>Save</button>
                 </div>
             </div>)}
 
 
-            <div className="updateItem option" onClick={handleToggleE}>Edit</div>
-            <div className="updateItem option" onClick={handleToggleD}>Delete</div>
+            <span className="material-symbols-outlined updateItem option" onClick={handleToggleE}>edit</span>
+            <span className="material-symbols-outlined updateItem option" onClick={handleToggleD}>delete</span>
         </div>
     )
 }
 
 export default UpdateCollapse;
+

@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import '../styles/navBar.css'
 import ProfileOpen from './profileOpen';
 
-const Navbar = () => {
+const Navbar = (props) => {
   const navigate = useNavigate();
 
   const [user, setUser] = useState({});
@@ -31,6 +31,7 @@ const Navbar = () => {
   const handleLogout = () => {
       localStorage.removeItem('access_token');
       localStorage.removeItem('refresh_token');
+      props.socket.close();
       navigate('/login');
   }
 
@@ -38,6 +39,9 @@ const Navbar = () => {
     return (
       <nav className='navBarContainer'>
         <ul>
+          <li className='navItem'>
+          <span className="material-symbols-outlined">notifications</span>
+          </li>
           <li className='navItem'>
             <ProfileOpen user = {user}/>
           </li>

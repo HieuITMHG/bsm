@@ -11,8 +11,6 @@ class ChatConsumer(WebsocketConsumer):
     def connect(self):
         self.user = self.scope['user']
 
-        print(self.user)
-
         group_list = GroupChat.objects.filter(participants = self.user.id)
 
         for group in group_list:
@@ -26,7 +24,7 @@ class ChatConsumer(WebsocketConsumer):
     
     def disconnect(self, close_code):
 
-        group_list = GroupChat.objects.filter(participants = self.user)
+        group_list = GroupChat.objects.filter(participants = self.user.id)
 
         for group in group_list:
             async_to_sync(self.channel_layer.group_discard)(
@@ -42,17 +40,28 @@ class ChatConsumer(WebsocketConsumer):
         if type == "chat_message":       
             content = data_json['content']    
             receiver_id = data_json['receiver_id']    
+            print(content)
+            print(receiver_id)
             receiver = User.objects.get(pk=receiver_id)
+            print("got receiver")
 
             message = Message.objects.create(
                 sender = self.user,
-                receiver = receiver,
                 content = content
             )
+            message.receiver.add(receiver)
+            message.save()
 
             serializer_data  = MessageSerializer(message).data
             
-            groupChat = GroupChat.objects.filter( Q(participants=self.user) & Q(participants=receiver))
+            subname =  ""
+            if self.user.id < receiver.id:
+                subname =  f"{self.user.id}_{receiver.id}"
+            else:
+                subname = f"{receiver.id}_{self.user.id}"
+            groupName = f"group_name_{subname}"
+
+            groupChat = GroupChat.objects.get(groupName = groupName)
 
             groupChat.messages.add(message)
 

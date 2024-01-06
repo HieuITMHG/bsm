@@ -18,6 +18,7 @@ class MessageView(APIView):
         else:
             subname = f"{receiver.id}_{request.user.id}"
         groupName = f"group_name_{subname}"
+        
         groupChat = GroupChat.objects.get(groupName = groupName)
 
         queryset = groupChat.messages.all()

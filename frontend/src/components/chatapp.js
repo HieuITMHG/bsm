@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import ChatBox from "./chatbox";
 
-const Chatapp = () => {
+const Chatapp = (props) => {
     const [loading, setLoading] = useState(true)
     const [user, setUser] = useState({});
     const [friends, setFriends] = useState([])
@@ -19,7 +19,6 @@ const Chatapp = () => {
           })
             .then((response) => response.json())
             .then((data) => {
-              console.log(data)
               setUser(data)
               setFriends(data.friends)
               setFilteredFriends(data.friends)
@@ -59,7 +58,7 @@ const Chatapp = () => {
 
               {
                 filteredFriends.map(friend => (           
-                  <ChatBox receiver = {friend} sender = {user} key={friend.username}/>                                                
+                  <ChatBox receiver = {friend} sender = {user} key={`chatbox_${friend.username}`} socket =  {props.socket} />                                                
                 ))
               }
               <div className="message_input"></div>

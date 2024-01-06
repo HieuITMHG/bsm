@@ -84,16 +84,21 @@
 
 
 .caption {
-    height: auto;
-    width: 400px;
+    display: block;
+    width: 95%;
+    overflow: hidden;
     resize: none;
+    min-height: 40px;
+    line-height: 20px;
+    border: 1px solid black;
+    max-height: 342px;
     border-radius: 20px;
-    outline: none;
-    padding: 10px;
-    margin-bottom: 20px;
-    font-size: 20px;
-    overflow-y: hidden; 
+    padding: 5px;
+    font-size: medium;
+    overflow-y: auto;
 }
+
+
 
 
 .closePostForm .material-symbols-outlined{
@@ -168,8 +173,10 @@
 .updateContainer {
     border: 1px solid black;
     position: absolute;
-    top: 20px;
-    right: -28px;
+    top: 12px;
+    right: -12px;
+    display: flex;
+    flex-direction: column;
 }
 
 .option:hover {
@@ -664,3 +671,19 @@ button:hover {
 .searchBtn:hover {
     background-color: var(--overlay-collor);
 }
+
+.updateBtn {
+    width: 100px;
+    background-color: var(--button-collor);
+    color: white;
+    border: 1px solid var(--button-collor);
+    height: 40px;
+    border-radius: 20px;
+    margin-top: 30px;
+}
+
+.updateBtn:hover {
+    background-color: white;
+    color: var(--button-collor);
+}
+

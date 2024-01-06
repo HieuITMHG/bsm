@@ -43,7 +43,7 @@ const Message = (props) => {
                         </div>
                     </div>
                 }
-                {isUser && <span class="material-symbols-outlined delete-message-btn" onClick={handeCancel}>delete</span>}
+                {isUser && <span className="material-symbols-outlined delete-message-btn" onClick={handeCancel}>delete</span>}
                 {!isUser && (
                     <div className="avatarContainer profileAvatar ">
                         <img src={props.message.sender.avatar.file} alt="avatar" className="avatar"/>

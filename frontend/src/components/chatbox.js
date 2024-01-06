@@ -3,7 +3,6 @@ import ProfileOpen from './profileOpen';
 import Message from './message';
 
 function ChatBox(props) {
-  console.log("render");
   const [message, setMessage] = useState('');
   const [receivedMessages, setReceivedMessages] = useState([]);
   const [isOpen, setIsOpen] = useState(false)
@@ -15,70 +14,97 @@ function ChatBox(props) {
   const [isOnline, setIsOnline] = useState(props.receiver.online_status)
   const [deletedMessages, setDeletedMessages] = useState([])
 
-  useEffect(() => {
-    // Kiểm tra nếu WebSocket chưa được khởi tạo
-    if (!socket) {
-      const newSocket = new WebSocket(`ws://localhost:8000/ws/chat/${props.sender.id}/${props.receiver.id}/`);
+  // useEffect(() => {
+  //   // Kiểm tra nếu WebSocket chưa được khởi tạo
+  //   if (!socket) {
+  //     let newSocket = new WebSocket(`ws://localhost:8000/ws/chat/${props.sender.id}/${props.receiver.id}/`);
       
-      newSocket.onopen = () => {
-        console.log('WebSocket connected');
-      };
+  //     newSocket.onopen = () => {
+  //       console.log(`WebSocket connected: ${props.receiver.id}`);
+  //     };
 
-      newSocket.onmessage = (event) => {
-        const data = JSON.parse(event.data);
-        console.log(data)
-        if(data.type == "update") {
-          console.log("lkdsld")
-          if((data.typing_status == true) && (data.who == props.receiver.id)) {
-              setDi(true)        
-          }else if ((data.typing_status == false) && (data.who == props.receiver.id)) {
-              setDi(false)                
-          }
-        }
-        else if(data.type == "chat_message") {
-          setReceivedMessages(prevMessages => [...prevMessages, data.content]);
-          setDi(false);
-        }else if(data.type == "online_status") {
-          console.log("online");
-          if(data.online_status == true && data.onliner_id == props.receiver.id) {
-              setIsOnline(true);
-          }else if(data.online_status ==false && data.onliner_id == props.receiver.id) {
-              setIsOnline(false)
-          }
-        }else if (data.type == "delete") {
-            setDeletedMessages(prevDeletedMessages => [...prevDeletedMessages, data.message_id])
-        }
-    }
+  //     newSocket.onmessage = (event) => {
+  //       const data = JSON.parse(event.data);
+  //       if(data.type == "update") {
+  //         if((data.typing_status == true) && (data.who == props.receiver.id)) {
+  //             setDi(true)        
+  //         }else if ((data.typing_status == false) && (data.who == props.receiver.id)) {
+  //             setDi(false)                
+  //         }
+  //       }
+  //       else if(data.type == "chat_message") {
+  //         setReceivedMessages(prevMessages => [...prevMessages, data.content]);
+  //         setDi(false);
+  //       }else if(data.type == "online_status") {
+  //         if(data.online_status == true && data.onliner_id == props.receiver.id) {
+  //             setIsOnline(true);
+  //         }else if(data.online_status ==false && data.onliner_id == props.receiver.id) {
+  //             setIsOnline(false)
+  //         }
+  //       }else if (data.type == "delete") {
+  //           setDeletedMessages(prevDeletedMessages => [...prevDeletedMessages, data.message_id])
+  //       }
+  //   }
 
-      setSocket(newSocket); // Lưu WebSocket vào state
-    }
+  //     setSocket(newSocket); // Lưu WebSocket vào state
+  //   }
 
-    return () => {
-      if (socket) {
-        socket.close();
-      }
-    };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [socket, props.sender.id, props.receiver.id]);
+  //   return () => {
+  //     if (socket) {
+  //       socket.close();
+  //       console.log(`WebSocket disconnected: ${props.receiver.id}`);
+  //     }
+  //   };
+  //   // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, [socket, props.sender.id, props.receiver.id]);
   
   
-  const handleInputChange = (e) => {
+  // const handleInputChange = (e) => {
 
-    const val = e.target.value;
-    if(val.length != 0) {
-      if(!isSend) {
-        console.log("on");
-        socket.send(JSON.stringify({type : 'update', typing_status: true, who : props.sender.id}));
-        setIsSend(true) 
-      } 
-    }else {
-        console.log("off");
-        socket.send(JSON.stringify({type : 'update', typing_status: false, who: props.sender.id }))
-        setIsSend(false)
+  //   const val = e.target.value;
+  //   if(val.length != 0) {
+  //     if(!isSend) {
+  //       console.log("on");
+  //       socket.send(JSON.stringify({type : 'update', typing_status: true, who : props.sender.id}));
+  //       setIsSend(true) 
+  //     } 
+  //   }else {
+  //       console.log("off");
+  //       socket.send(JSON.stringify({type : 'update', typing_status: false, who: props.sender.id }))
+  //       setIsSend(false)
       
-    }
+  //   }
     
-  }
+  // }
+
+  useEffect(() => {
+    receivedMessages.map(mes => {
+      console.log(mes)
+    })
+    const socket =  props.socket
+    socket.onmessage = (event) => {
+      const data = JSON.parse(event.data);
+      if(data.type == "update") {
+        if((data.typing_status == true) && (data.who == props.receiver.id)) {
+            setDi(true)        
+        }else if ((data.typing_status == false) && (data.who == props.receiver.id)) {
+            setDi(false)                
+        }
+      }
+      else if(data.type == "chat_message") {
+        console.log(data)
+        setReceivedMessages(prevMessages => [...prevMessages, data.content]);
+        setDi(false);
+      }else if(data.type == "online_status") {
+        if(data.online_status == true && data.onliner_id == props.receiver.id) {
+            setIsOnline(true);
+        }else if(data.online_status ==false && data.onliner_id == props.receiver.id) {
+            setIsOnline(false)
+        }
+      }else if (data.type == "delete") {
+          setDeletedMessages(prevDeletedMessages => [...prevDeletedMessages, data.message_id])
+      }
+  }},[receivedMessages])
 
   useEffect(() => {
     const access_token = localStorage.getItem("access_token");
@@ -100,10 +126,11 @@ function ChatBox(props) {
 
   const sendMessage = () => {
     const data = {
+      receiver_id : props.receiver.id,
       content: message,
       type: 'chat_message'
     };
-    socket.send(JSON.stringify(data));
+    props.socket.send(JSON.stringify(data));
     setMessage('');
     setIsOpen(true)
   };
@@ -133,22 +160,24 @@ function ChatBox(props) {
           {/* message area */}
           {/* end message area */}
               <div className='messageFieldContainer'>
+                
                   {messages.map(mes => (
-                    <>
-                      {!(deletedMessages.includes(mes.id)) && <Message message = {mes} key={`m_${mes.id}`} user = {props.sender} socket = {socket}/>}
-                    </>                   
+                    <div key={`mv_${mes.id}`}>
+                      {!(deletedMessages.includes(mes.id)) && <Message message = {mes}  user = {props.sender} socket = {props.socket}/>}
+                    </div>                   
                   ))}
+
                   {receivedMessages.map(mes => (
-                    <>
-                      {!(deletedMessages.includes(mes.id)) && <Message message = {mes} key={`m_${mes.id}`} user = {props.sender} socket = {socket}/>}
-                    </> 
+                    <div key={`mv_${mes.id}`}>
+                      {!(deletedMessages.includes(mes.id)) && <Message message = {mes} user = {props.sender} socket = {props.socket}/>}
+                    </div> 
                   ))}
                   {di && <div className='typing_indicator'>ooo</div> }
               </div>
           {/* enter message */}
           <div className='sendMessageContainer'>
             <span className="material-symbols-outlined">attach_file</span>
-            <input type="text" value={message} onChange={(e) => setMessage(e.target.value)} className='message_input' onInput={handleInputChange}/>         
+            <input type="text" value={message} onChange={(e) => setMessage(e.target.value)} className='message_input'/>         
             <button onClick={sendMessage} style={{ display: 'none' }} id='sendMessageBtn'>Send</button>
             <label htmlFor='sendMessageBtn' style={{display: 'flex', alignItems:'center', cursor:'pointer'}}>
               <span className="material-symbols-outlined">send</span>

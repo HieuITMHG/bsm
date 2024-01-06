@@ -37,7 +37,7 @@
     overflow-y: auto;
     width: 400px;
     background-color: rgb(198 226 255);
-    
+    min-width: 400px;
 }
 
 .commentView {
@@ -82,4 +82,18 @@
 .captionhehe {
     max-height: 70%;
     max-width: 70%;
+}
+
+.arrow {
+    background-color: #F5FDFF;
+    width: 40px;
+    border: none;
+    line-height: 100vh;
+    text-align: center;
+    font-size: xx-large;
+    cursor: default;
+}
+
+.arrow:hover {
+    background-color: #f0f2f5;
 }

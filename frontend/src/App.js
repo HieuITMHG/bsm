@@ -15,53 +15,6 @@ import MyComponent from './components/lkalfk';
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
 
 function App() {
-  
-  const navigate = useNavigate();
-  const [isLoading, setIsLoading] = useState(true); 
- 
-  const checkTokenValidity = async () => {
-    console.log("refresh")
-      const refreshToken = localStorage.getItem('refresh_token');
-        try {
-            const refreshResponse = await fetch('/api/token/refresh/', {
-              method: 'POST',
-              headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${refreshToken}`
-              },
-              body: JSON.stringify({ refresh: refreshToken })
-            });
-  
-            if (refreshResponse.ok) {
-              console.log("new access token");
-              const newData = await refreshResponse.json();
-              localStorage.setItem('access_token', newData.access);
-              
-            } else {
-              navigate('/login');
-            }
-        } catch (error) {
-          console.error('Error:', error);
-        }
-    
-      
-      setIsLoading(false);
-  };
-
-
-  useEffect(() => {
-    checkTokenValidity();
-    setInterval(checkTokenValidity, 780000);
-
-    return () => {
-        clearInterval(checkTokenValidity);
-    }
-  },[])
-
-
-  if (isLoading) {
-    return <div>Loading...</div>;
-  }
 
   return (
     <div className="App">

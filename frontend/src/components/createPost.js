@@ -34,20 +34,20 @@ const CreatePost = (props) => {
     };
 
     const handleChange = (e) => {
-        const { name, value } = e.target;
+        const cap = e.target.textContent;
+        console.log(cap);
         setFormData({
             ...formData,
-            [name]: value
+            caption: cap
         });
     };
 
     const handleFileInputChange = (e) => {
         const files = e.target.files;
         const filesArray = Array.from(files);
-
         setFormData(prevFormData => ({
             ...prevFormData,
-            media: filesArray
+            media: [...prevFormData.media, ...filesArray]
         }));
     };
 
@@ -89,7 +89,7 @@ const CreatePost = (props) => {
                         <div className="closePostForm">
                             <span className="material-symbols-outlined">close</span>
                         </div>
-                        <textarea onChange={handleChange} name="caption" id="caption" className="caption x" autoFocus rows={1}/>
+                        <span onInput={handleChange} role="textbox" className="caption x" rows={1} contentEditable autoFocus></span>
                         <div>
                             {formData.media.map((media, index) => (
                                 <img

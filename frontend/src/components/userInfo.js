@@ -111,7 +111,13 @@ const UserInfo = (props) => {
         return (
             
             <div className="profileContainer">
-                    {toggleForm && <UploadAvatar func = {func}/>}
+                    {
+                        user.id == cuser.id && 
+                        <>
+                            {toggleForm && <UploadAvatar func = {func}/>}
+                        </>
+                    }
+                    
                     <div className="infoBox">
                         <div className="avatarContainer profileAvatar " onClick={func}>
                             <img src={user.avatar.file} alt="avatar" className="avatar"/>
