@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef} from 'react';
 import Navbar from '../components/Navbar';
 import CreatePost from '../components/createPost';
 import Post from '../components/post';
@@ -8,14 +8,32 @@ import { BrowserRouter, useNavigate } from 'react-router-dom';
 
 
 const Home = () => {
-    
+
     const [posts, setPosts] = useState([]);
-    const [Loading, setLoading] = useState(true);
+    const loadingRef = useRef(true)
+    const cuserRef = useRef({})
     const [signal, setSignal] = useState(false);
-    const [socket, setSocket] = useState(null)
+    const socketRef = useRef(null)
 
      
   const navigate = useNavigate();
+
+  const getUser = () => {
+      const access_token = localStorage.getItem("access_token");
+        
+      if (access_token) {
+        fetch("/api/user/", {
+          headers: {
+            Authorization: `Bearer ${access_token}`,
+          },
+        })
+          .then((response) => response.json())
+          .then((data) => {
+            cuserRef.current = data
+          })
+          .catch((error) => console.error("Error:", error));
+    }
+  }
  
   const checkTokenValidity = async () => {
       const refreshToken = localStorage.getItem('refresh_token');
@@ -46,6 +64,8 @@ const Home = () => {
 
   useEffect(() => {
     checkTokenValidity();
+    websocketconnect();
+    getUser();
     setInterval(checkTokenValidity, 780000);
 
     return () => {
@@ -53,10 +73,10 @@ const Home = () => {
     }
   },[])
 
-    useEffect(() => {
+   const websocketconnect = () => {
         // Kiểm tra nếu WebSocket chưa được khởi tạo
         const access_token = localStorage.getItem('access_token')
-        if (!socket) {
+        if (!socketRef.current) {
           const newSocket = new WebSocket(`ws://localhost:8000/ws/chat/?token=${encodeURIComponent(access_token)}`);
           
           newSocket.onopen = () => {
@@ -66,16 +86,16 @@ const Home = () => {
           newSocket.onclose = () => {
             console.log("disconnected")
           }
-          setSocket(newSocket); 
+          socketRef.current = newSocket
         }
     
         return () => {
-          if (socket) {
-            socket.close();
+          if (socketRef.current) {
+            socketRef.current.close();
             console.log(`WebSocket disconnected`);
           }
         };
-      }, []);
+      }
     
     useEffect(() => {
         const fet = () => {
@@ -83,21 +103,22 @@ const Home = () => {
             .then(response => response.json())
             .then(data => {
                 setPosts(data);
-                setLoading(false);
             })
             .catch(error => console.error('Error:', error));
         }   
         fet();
+        
+        loadingRef.current = false
       },[signal]);
 
-      if(Loading) {
+      if(loadingRef.current) {
         return (
             <div className="spinner-border"></div>
         )
       }else {
         return (
             <div className='homeContainer'>
-                <Navbar socket = {socket}/>
+                <Navbar socket = {socketRef.current}/>
 
                 <div className='mainView'>     
                     <CreatePost posts = {posts} setPosts = {setPosts}/>
@@ -105,7 +126,7 @@ const Home = () => {
                     <div className='postsView'>
                         <ul className="postList">
                             {posts.map(post => (
-                                    <Post post={post} key={post.id} setSignal = {setSignal} signal = {signal}/>
+                                    <Post post={post} key={post.id} setSignal = {setSignal} signal = {signal} cuser = {cuserRef.current}/>
                             ))}
                         </ul>
                     </div> 
@@ -113,7 +134,7 @@ const Home = () => {
                     
                 </div>
 
-                <Chatapp socket={socket} />
+                <Chatapp socket={socketRef.current} cuser = {cuserRef.current}/>
 
             </div>
         );

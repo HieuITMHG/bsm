@@ -11,6 +11,10 @@ class ChatConsumer(WebsocketConsumer):
     def connect(self):
         self.user = self.scope['user']
 
+        user = User.objects.get(pk = self.user.id)
+        user.online_status = True
+        user.save()
+
         group_list = GroupChat.objects.filter(participants = self.user.id)
 
         for group in group_list:
@@ -19,10 +23,23 @@ class ChatConsumer(WebsocketConsumer):
                 self.channel_name
             )
 
+            async_to_sync(self.channel_layer.group_send)(
+                group.groupName,
+                {
+                    'type' : 'online_status',
+                    'online_status': True,
+                    'onliner_id':self.user.id
+                }
+            )
+
         self.accept()
 
     
     def disconnect(self, close_code):
+
+        user = User.objects.get(pk = self.user.id)
+        user.online_status = False
+        user.save()
 
         group_list = GroupChat.objects.filter(participants = self.user.id)
 
@@ -30,6 +47,15 @@ class ChatConsumer(WebsocketConsumer):
             async_to_sync(self.channel_layer.group_discard)(
                 group.groupName,
                 self.channel_name
+            )
+
+            async_to_sync(self.channel_layer.group_send)(
+                group.groupName,
+                {
+                    'type' : 'online_status',
+                    'online_status': False,
+                    'onliner_id':self.user.id
+                }
             )
 
 
@@ -63,6 +89,7 @@ class ChatConsumer(WebsocketConsumer):
 
             groupChat = GroupChat.objects.get(groupName = groupName)
 
+
             groupChat.messages.add(message)
 
             groupChat.save()
@@ -70,6 +97,7 @@ class ChatConsumer(WebsocketConsumer):
             async_to_sync(self.channel_layer.group_send)(
                 groupChat.groupName,
                 {
+                    'group':groupChat.groupName,
                     'type': type,
                     'content': serializer_data,
                 }
@@ -101,9 +129,11 @@ class ChatConsumer(WebsocketConsumer):
     def chat_message(self, event):
         print("YOU ARE WELCOME")
         content = event['content']
+        group = event['group']
         self.send(text_data=json.dumps({
             'content' : content,
-            'type' : 'chat_message'
+            'type' : 'chat_message',
+            'group' : group
         }))
 
     def update(self,event):

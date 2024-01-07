@@ -36,8 +36,6 @@ const FollowingPosts = () => {
                 </div>
 
             </div>
-                
-            <Chatapp />
         </div> 
     )
 }

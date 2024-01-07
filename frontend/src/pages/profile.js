@@ -42,7 +42,6 @@ const Profile = () => {
                         </div> 
                     </div>
                 }
-                <Chatapp />
             </>
         )
     }

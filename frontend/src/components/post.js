@@ -10,9 +10,7 @@ const Post = (props) => {
     const [isLoading, setIsLoading] = useState(true)
     const [count, setCount] = useState(0)
     const [more, setMore] = useState(false)
-    const [user, setUser] = useState({})
     const [morec, setMorec] = useState(false)
-    const [caption, setCaption] = useState(null)
     const access_token = localStorage.getItem("access_token");
 
     const handleMore = () => {
@@ -25,22 +23,14 @@ const Post = (props) => {
       }
 
     useEffect(() => {
-        if (access_token) {
-          fetch("http://127.0.0.1:8000/api/user/", {
-            headers: {
-              Authorization: `Bearer ${access_token}`,
-            },
-          })
-            .then((response) => response.json())
-            .then((data) => {
-                const is_liked = props.post.liker.includes(data.id)
-                setUser(data)
-                setIsLike(is_liked);
-                setCount(props.post.liker.length)
-                setIsLoading(false)
-            })
-            .catch((error) => console.error("Error:", error));
+        const countLikes = () => {
+            const is_liked = props.post.liker.includes(props.cuser.id)
+            setIsLike(is_liked)
+            setCount(props.post.liker.length)
+            setIsLoading(false)
         }
+
+        countLikes()
         
       }, []);
 
@@ -133,7 +123,7 @@ const Post = (props) => {
     if(!isLoading) {
         return (
             <div className="postsContainer" id={props.post.id}>
-                {user.id === props.post.creater.id && <span className="material-symbols-outlined more" onClick={handleMore}>more_horiz</span>}
+                {props.cuser.id === props.post.creater.id && <span className="material-symbols-outlined more" onClick={handleMore}>more_horiz</span>}
                 
                 {more && <UpdateCollapse post = {props.post} setMore = {setMore}/>}
                 <div className="userInfo">

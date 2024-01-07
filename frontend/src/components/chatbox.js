@@ -1,128 +1,12 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useDebugValue } from 'react';
 import ProfileOpen from './profileOpen';
 import Message from './message';
 
 function ChatBox(props) {
   const [message, setMessage] = useState('');
-  const [receivedMessages, setReceivedMessages] = useState([]);
   const [isOpen, setIsOpen] = useState(false)
-  const [messages, setMessages] =  useState([])
+  const [group, setGroup] = useState({})
   const [isLoading, setIsLoading] = useState(true)
-  const [di, setDi] = useState(false)
-  const [isSend, setIsSend] = useState(false)
-  const [socket, setSocket] = useState(null);
-  const [isOnline, setIsOnline] = useState(props.receiver.online_status)
-  const [deletedMessages, setDeletedMessages] = useState([])
-
-  // useEffect(() => {
-  //   // Kiểm tra nếu WebSocket chưa được khởi tạo
-  //   if (!socket) {
-  //     let newSocket = new WebSocket(`ws://localhost:8000/ws/chat/${props.sender.id}/${props.receiver.id}/`);
-      
-  //     newSocket.onopen = () => {
-  //       console.log(`WebSocket connected: ${props.receiver.id}`);
-  //     };
-
-  //     newSocket.onmessage = (event) => {
-  //       const data = JSON.parse(event.data);
-  //       if(data.type == "update") {
-  //         if((data.typing_status == true) && (data.who == props.receiver.id)) {
-  //             setDi(true)        
-  //         }else if ((data.typing_status == false) && (data.who == props.receiver.id)) {
-  //             setDi(false)                
-  //         }
-  //       }
-  //       else if(data.type == "chat_message") {
-  //         setReceivedMessages(prevMessages => [...prevMessages, data.content]);
-  //         setDi(false);
-  //       }else if(data.type == "online_status") {
-  //         if(data.online_status == true && data.onliner_id == props.receiver.id) {
-  //             setIsOnline(true);
-  //         }else if(data.online_status ==false && data.onliner_id == props.receiver.id) {
-  //             setIsOnline(false)
-  //         }
-  //       }else if (data.type == "delete") {
-  //           setDeletedMessages(prevDeletedMessages => [...prevDeletedMessages, data.message_id])
-  //       }
-  //   }
-
-  //     setSocket(newSocket); // Lưu WebSocket vào state
-  //   }
-
-  //   return () => {
-  //     if (socket) {
-  //       socket.close();
-  //       console.log(`WebSocket disconnected: ${props.receiver.id}`);
-  //     }
-  //   };
-  //   // eslint-disable-next-line react-hooks/exhaustive-deps
-  // }, [socket, props.sender.id, props.receiver.id]);
-  
-  
-  // const handleInputChange = (e) => {
-
-  //   const val = e.target.value;
-  //   if(val.length != 0) {
-  //     if(!isSend) {
-  //       console.log("on");
-  //       socket.send(JSON.stringify({type : 'update', typing_status: true, who : props.sender.id}));
-  //       setIsSend(true) 
-  //     } 
-  //   }else {
-  //       console.log("off");
-  //       socket.send(JSON.stringify({type : 'update', typing_status: false, who: props.sender.id }))
-  //       setIsSend(false)
-      
-  //   }
-    
-  // }
-
-  useEffect(() => {
-    receivedMessages.map(mes => {
-      console.log(mes)
-    })
-    const socket =  props.socket
-    socket.onmessage = (event) => {
-      const data = JSON.parse(event.data);
-      if(data.type == "update") {
-        if((data.typing_status == true) && (data.who == props.receiver.id)) {
-            setDi(true)        
-        }else if ((data.typing_status == false) && (data.who == props.receiver.id)) {
-            setDi(false)                
-        }
-      }
-      else if(data.type == "chat_message") {
-        console.log(data)
-        setReceivedMessages(prevMessages => [...prevMessages, data.content]);
-        setDi(false);
-      }else if(data.type == "online_status") {
-        if(data.online_status == true && data.onliner_id == props.receiver.id) {
-            setIsOnline(true);
-        }else if(data.online_status ==false && data.onliner_id == props.receiver.id) {
-            setIsOnline(false)
-        }
-      }else if (data.type == "delete") {
-          setDeletedMessages(prevDeletedMessages => [...prevDeletedMessages, data.message_id])
-      }
-  }},[receivedMessages])
-
-  useEffect(() => {
-    const access_token = localStorage.getItem("access_token");
-
-    if (access_token) {
-      fetch(`/chat/messages/${props.receiver.id}`, {
-        headers: {
-          Authorization: `Bearer ${access_token}`,
-        },
-      })
-        .then((response) => response.json())
-        .then((data) => {
-          setMessages(data);
-          setIsLoading(false)
-        })
-        .catch((error) => console.error("Error:", error));
-    }
-  }, []);
 
   const sendMessage = () => {
     const data = {
@@ -139,12 +23,30 @@ function ChatBox(props) {
     setIsOpen(!isOpen)
   }
 
-  const onlineStyle = {
-    color: 'green'
-  };
+  useEffect(() => {
+    const access_token = localStorage.getItem("access_token")
+    fetch(`/chat/singlegroupchat/${props.group.groupName}/`, {
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${access_token}`
+      }
+      })
+      .then(respone => respone.json())
+      .then(data => {
+        setGroup(data)
+        setIsLoading(false)
+    })
+  },[props.mes])
 
-  if(!isLoading) {
-    
+  const onlineStyle = {
+    color : 'green'
+  }
+
+  if(isLoading) {
+    return (
+      <div>Loading...</div>
+    )
+  }else {
     return (
       <>
         {isOpen ? (
@@ -153,26 +55,15 @@ function ChatBox(props) {
           <div className='headerChat'>
             <span className="material-symbols-outlined" onClick={handleOpen}>arrow_back_ios</span>
             <ProfileOpen user = {props.receiver}/>
-            <span className="material-symbols-outlined" style={isOnline ? onlineStyle : null}>fiber_manual_record</span>
           </div>
           {/* end header */}
   
           {/* message area */}
           {/* end message area */}
               <div className='messageFieldContainer'>
-                
-                  {messages.map(mes => (
-                    <div key={`mv_${mes.id}`}>
-                      {!(deletedMessages.includes(mes.id)) && <Message message = {mes}  user = {props.sender} socket = {props.socket}/>}
-                    </div>                   
+                  {group.messages.map(mes => (
+                    <Message message = {mes} user = {props.sender} socket = {props.socket} key={`mv_${mes.id}`} />
                   ))}
-
-                  {receivedMessages.map(mes => (
-                    <div key={`mv_${mes.id}`}>
-                      {!(deletedMessages.includes(mes.id)) && <Message message = {mes} user = {props.sender} socket = {props.socket}/>}
-                    </div> 
-                  ))}
-                  {di && <div className='typing_indicator'>ooo</div> }
               </div>
           {/* enter message */}
           <div className='sendMessageContainer'>
@@ -195,17 +86,18 @@ function ChatBox(props) {
   
           <div className='nameames'>
             <div className='name'><strong>{props.receiver.username}</strong></div>
-            <div className='lastMes'  style={{color:'gray'}}>{(messages.length != 0) ? messages[messages.length-1].content : ""}</div>
           </div>
-          <span className="material-symbols-outlined" style={isOnline ? onlineStyle : null}>fiber_manual_record</span>
+
+          <span className="material-symbols-outlined" style={props.onlines.includes(props.receiver.id) ? onlineStyle : null}>fiber_manual_record</span>
+
         </div>  
         )}
       </>
       
     );
-  }
+  }}
   
-}
+
 
 export default ChatBox;
 

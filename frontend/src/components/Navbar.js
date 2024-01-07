@@ -31,7 +31,6 @@ const Navbar = (props) => {
   const handleLogout = () => {
       localStorage.removeItem('access_token');
       localStorage.removeItem('refresh_token');
-      props.socket.close();
       navigate('/login');
   }
 
