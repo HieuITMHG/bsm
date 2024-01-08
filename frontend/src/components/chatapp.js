@@ -7,17 +7,27 @@ const Chatapp = (props) => {
     const [groups, setGroups] = useState([])
     const [message, setMessage] = useState({})
     const [onlines, setOnlines] = useState([])
+    const [deletedMessages, setDeletedMessages] = useState([])
       
     useEffect(() => {
       const socket = props.socket;
-      
+
       const handleMessage = (event) => {
         const data = JSON.parse(event.data);
         if (data.type === "chat_message") {
             setMessage(data.content)
             console.log(data.content)
         }else if (data.type === "online_status") {
-            setOnlines(preOnlines => [...preOnlines, data.onliner_id])
+          console.log(`online_status of ${data.onliner_id}: ${data.online_status}`)
+            if (data.online_status == true){
+              setOnlines(preOnlines => [...preOnlines, data.onliner_id])
+            }else{
+              const updatedItems = onlines.filter(item => item !== data.onliner_id);
+              setOnlines(updatedItems)
+            }
+            
+        }else if(data.type  === "delete") {
+          setDeletedMessages(predele => [...predele, data.message_id])
         }
       };
     
@@ -41,15 +51,18 @@ const Chatapp = (props) => {
             .then((response) => response.json())
             .then((data) => {
               setGroups(data)
-              setIsLoading(false)
             })
             .catch((error) => console.error("Error:", error));
-        }
-      }, []);
 
-      useEffect(()=> {
-          console.log(groups)
-      },[groups])
+            props.cuser.friends.map(friend => {
+              if(friend.online_status == true) {
+                  setOnlines(preOnlines => [...preOnlines, friend.id])
+              }
+            })
+
+            setIsLoading(false)
+          }
+      }, []);
 
     if(isLoading) {
         return (
@@ -70,8 +83,8 @@ const Chatapp = (props) => {
                 groups.map(group => (
                   <div key={`chatbox_${group.id}`} >
                     {props.cuser.id != group.participants[0].id ? 
-                      <ChatBox sender = {props.cuser} receiver={group.participants[0]} socket = {props.socket} group = {group} mes = {message} onlines = {onlines}/>:
-                      <ChatBox sender = {props.cuser} receiver={group.participants[1]} socket = {props.socket} group = {group} mes = {message} onlines = {onlines}/>
+                      <ChatBox sender = {props.cuser} receiver={group.participants[0]} socket = {props.socket} group = {group} mes = {message} onlines = {onlines} deletedMessages = {deletedMessages}/>:
+                      <ChatBox sender = {props.cuser} receiver={group.participants[1]} socket = {props.socket} group = {group} mes = {message} onlines = {onlines} deletedMessages = {deletedMessages}/>
                     }
                   </div>
                                                                 

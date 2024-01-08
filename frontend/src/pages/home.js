@@ -7,16 +7,11 @@ import Chatapp from '../components/chatapp';
 import { BrowserRouter, useNavigate } from 'react-router-dom';
 
 
-const Home = () => {
-
+const Home = (props) => {
     const [posts, setPosts] = useState([]);
     const loadingRef = useRef(true)
     const cuserRef = useRef({})
     const [signal, setSignal] = useState(false);
-    const socketRef = useRef(null)
-
-     
-  const navigate = useNavigate();
 
   const getUser = () => {
       const access_token = localStorage.getItem("access_token");
@@ -34,68 +29,13 @@ const Home = () => {
           .catch((error) => console.error("Error:", error));
     }
   }
- 
-  const checkTokenValidity = async () => {
-      const refreshToken = localStorage.getItem('refresh_token');
-        try {
-            const refreshResponse = await fetch('/api/token/refresh/', {
-              method: 'POST',
-              headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${refreshToken}`
-              },
-              body: JSON.stringify({ refresh: refreshToken })
-            });
-  
-            if (refreshResponse.ok) {
-              console.log("new access token");
-              const newData = await refreshResponse.json();
-              localStorage.setItem('access_token', newData.access);
-              
-            } else {
-              navigate('/login');
-            }
-        } catch (error) {
-          console.error('Error:', error);
-        }
-
-  };
 
 
   useEffect(() => {
-    checkTokenValidity();
-    websocketconnect();
     getUser();
-    setInterval(checkTokenValidity, 780000);
-
-    return () => {
-        clearInterval(checkTokenValidity);
-    }
   },[])
 
-   const websocketconnect = () => {
-        // Kiểm tra nếu WebSocket chưa được khởi tạo
-        const access_token = localStorage.getItem('access_token')
-        if (!socketRef.current) {
-          const newSocket = new WebSocket(`ws://localhost:8000/ws/chat/?token=${encodeURIComponent(access_token)}`);
-          
-          newSocket.onopen = () => {
-            console.log(`WebSocket connected`);
-          };
-
-          newSocket.onclose = () => {
-            console.log("disconnected")
-          }
-          socketRef.current = newSocket
-        }
-    
-        return () => {
-          if (socketRef.current) {
-            socketRef.current.close();
-            console.log(`WebSocket disconnected`);
-          }
-        };
-      }
+  
     
     useEffect(() => {
         const fet = () => {
@@ -118,7 +58,7 @@ const Home = () => {
       }else {
         return (
             <div className='homeContainer'>
-                <Navbar socket = {socketRef.current}/>
+                <Navbar socket = {props.socket}/>
 
                 <div className='mainView'>     
                     <CreatePost posts = {posts} setPosts = {setPosts}/>
@@ -126,7 +66,7 @@ const Home = () => {
                     <div className='postsView'>
                         <ul className="postList">
                             {posts.map(post => (
-                                    <Post post={post} key={post.id} setSignal = {setSignal} signal = {signal} cuser = {cuserRef.current}/>
+                                    <Post post={post} key={post.id} setSignal = {setSignal} signal = {signal} cuser = {cuserRef.current} socket = {props.socket}/>
                             ))}
                         </ul>
                     </div> 
@@ -134,7 +74,7 @@ const Home = () => {
                     
                 </div>
 
-                <Chatapp socket={socketRef.current} cuser = {cuserRef.current}/>
+                <Chatapp socket={props.socket} cuser = {cuserRef.current}/>
 
             </div>
         );

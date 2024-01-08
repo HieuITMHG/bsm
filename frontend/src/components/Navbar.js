@@ -31,6 +31,7 @@ const Navbar = (props) => {
   const handleLogout = () => {
       localStorage.removeItem('access_token');
       localStorage.removeItem('refresh_token');
+      props.socket.close()
       navigate('/login');
   }
 
@@ -42,7 +43,7 @@ const Navbar = (props) => {
           <span className="material-symbols-outlined">notifications</span>
           </li>
           <li className='navItem'>
-            <ProfileOpen user = {user}/>
+            <ProfileOpen user = {user} socket={props.socket}/>
           </li>
           <li className='navItem'>
             <NavLink to="/" >

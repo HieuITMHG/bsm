@@ -5,6 +5,7 @@ const Message = (props) => {
     const [isUser, setIsUser] = useState(null)
     const [isOpen, setIsOpen] = useState(false)
 
+
     useEffect(() => {
         if(props.user.id == props.message.sender.id) {
             setIsUser(true)
@@ -18,7 +19,8 @@ const Message = (props) => {
     const handleDelete = () => {
         const data = {
             type : 'delete',
-            message_id : props.message.id
+            message_id : props.message.id,
+            a : props.message.receiver[0].id
         }
         props.socket.send(JSON.stringify(data))
         setIsOpen(false)

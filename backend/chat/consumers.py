@@ -115,10 +115,20 @@ class ChatConsumer(WebsocketConsumer):
             )
         elif type == "delete":
             message_id = data_json['message_id']
+            receiver_id = data_json['a'] 
+
             message = Message.objects.get(pk = message_id)
             message.delete()
+
+            subname =  ""
+            if self.user.id < receiver_id:
+                subname =  f"{self.user.id}_{receiver_id}"
+            else:
+                subname = f"{receiver_id}_{self.user.id}"
+            groupName = f"group_name_{subname}"
+
             async_to_sync(self.channel_layer.group_send)(
-                self.room_name,
+                groupName,
                 {
                     'type': type,
                     'message_id': message_id

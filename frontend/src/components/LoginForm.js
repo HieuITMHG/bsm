@@ -2,7 +2,7 @@ import '../styles/LoginForm.css';
 import { Link, useNavigate } from 'react-router-dom';
 import { useState } from 'react';
 
-const LoginForm = ({toggleForm}) => {
+const LoginForm = (props) => {
     const navigate = useNavigate();
     const [formData, setFormData] = useState({username : "", password : ""});
     const [data, SetData]  = useState("");
@@ -30,6 +30,7 @@ const LoginForm = ({toggleForm}) => {
             if (data.access && data.refresh) {
                 localStorage.setItem('access_token', data.access);
                 localStorage.setItem('refresh_token', data.refresh);
+                props.setTrigger(!props.trigger)
                 navigate('/');
             } else {
                 console.log(data['error']);
@@ -51,7 +52,7 @@ const LoginForm = ({toggleForm}) => {
                 <input autoFocus placeholder="Username" name="username" onChange={handleChange} />
                 <input autoFocus placeholder="Password" name="password" onChange={handleChange} />
                 <button onClick={handleSubmit} >Login</button>
-                <Link onClick={toggleForm}>Create New Accout</Link>
+                <Link onClick={props.toggleForm}>Create New Accout</Link>
             </form>
         </div>
     )

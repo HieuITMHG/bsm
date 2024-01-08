@@ -20,7 +20,7 @@ const LoginView = (props) => {
             <div className="alert alert-warning">
                 <strong>Warning!</strong> This alert box could indicate a warning that might need attention.
             </div>
-            {showLogin ? <LoginForm toggleForm = {toggleForm} /> : <RegisterForm toggleForm = {toggleForm} />}
+            {showLogin ? <LoginForm toggleForm = {toggleForm} trigger = {props.trigger} setTrigger = {props.setTrigger}/> : <RegisterForm toggleForm = {toggleForm} />}
         </div>
     );
 }

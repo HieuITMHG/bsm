@@ -62,7 +62,10 @@ function ChatBox(props) {
           {/* end message area */}
               <div className='messageFieldContainer'>
                   {group.messages.map(mes => (
-                    <Message message = {mes} user = {props.sender} socket = {props.socket} key={`mv_${mes.id}`} />
+                    <div key={`mv_${mes.id}`}>
+                      {!props.deletedMessages.includes(mes.id) && <Message message = {mes} user = {props.sender} socket = {props.socket}  />}
+                    </div>
+                    
                   ))}
               </div>
           {/* enter message */}

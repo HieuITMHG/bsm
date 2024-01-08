@@ -31,7 +31,6 @@ const Post = (props) => {
         }
 
         countLikes()
-        
       }, []);
 
     const squares = document.querySelectorAll('.mediaContainer');
@@ -127,7 +126,7 @@ const Post = (props) => {
                 
                 {more && <UpdateCollapse post = {props.post} setMore = {setMore}/>}
                 <div className="userInfo">
-                    <ProfileOpen user = {props.post.creater}/>
+                    <ProfileOpen user = {props.post.creater} socket = {props.socket}/>
                 </div>
                 
                 <div className='displayCaption'>
