@@ -2,9 +2,9 @@
 import json
 from asgiref.sync import async_to_sync
 from channels.generic.websocket import WebsocketConsumer
-from chat.models import Message, GroupChat
+from chat.models import Message, GroupChat, Notification
 from core.models import User 
-from chat.serializer import MessageSerializer
+from chat.serializer import MessageSerializer, NotificationSerializer
 from django.db.models import Q
 
 class ChatConsumer(WebsocketConsumer):
@@ -44,11 +44,6 @@ class ChatConsumer(WebsocketConsumer):
         group_list = GroupChat.objects.filter(participants = self.user.id)
 
         for group in group_list:
-            async_to_sync(self.channel_layer.group_discard)(
-                group.groupName,
-                self.channel_name
-            )
-
             async_to_sync(self.channel_layer.group_send)(
                 group.groupName,
                 {
@@ -56,6 +51,11 @@ class ChatConsumer(WebsocketConsumer):
                     'online_status': False,
                     'onliner_id':self.user.id
                 }
+            )
+
+            async_to_sync(self.channel_layer.group_discard)(
+                group.groupName,
+                self.channel_name
             )
 
 
@@ -88,7 +88,6 @@ class ChatConsumer(WebsocketConsumer):
             groupName = f"group_name_{subname}"
 
             groupChat = GroupChat.objects.get(groupName = groupName)
-
 
             groupChat.messages.add(message)
 
@@ -134,6 +133,25 @@ class ChatConsumer(WebsocketConsumer):
                     'message_id': message_id
                 }
             )
+        elif type == "notification":
+            print("received notification")
+            groupName = f"notification_{self.user.id}"
+            group = GroupChat.objects.get(groupName = groupName)
+            notification = Notification.objects.create(sender = self.user, content = f"{self.user} has posted a new post", is_seen = False, groupChat = group)
+            friends = self.user.friends.all()
+            for fri in friends:
+                notification.receiver.add(fri)
+            notification.save()
+
+            serializer_data = NotificationSerializer(notification).data
+
+            async_to_sync(self.channel_layer.group_send)(
+                groupName,
+                {
+                    'type' : type,
+                    'notification': serializer_data
+                }
+            )
 
 
     def chat_message(self, event):
@@ -171,4 +189,12 @@ class ChatConsumer(WebsocketConsumer):
         self.send(text_data=json.dumps({
             'message_id' : message_id,
             'type': 'delete'
+        }))
+
+    def notification(self, event):
+        print("prepared to send notifation")
+        notification = event['notification']
+        self.send(text_data=json.dumps({
+            'type' : "notification",
+            'notification' : notification
         }))

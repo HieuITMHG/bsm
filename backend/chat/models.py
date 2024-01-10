@@ -14,9 +14,21 @@ class Message(models.Model):
         return self.content
 
 class GroupChat(models.Model):
+    groupType = models.CharField(max_length=20, null = True)
     participants = models.ManyToManyField(User, blank=True)
     groupName = models.CharField(max_length=100)
     messages = models.ManyToManyField('Message', blank=True)
 
     def __str__(self):
         return self.groupName
+
+class Notification(models.Model):
+    receiver = models.ManyToManyField(User, blank=True, related_name='received_notification')
+    groupChat = models.ForeignKey('GroupChat', on_delete =  models.CASCADE, related_name = 'sent_notification')
+    content = models.CharField(max_length = 100)
+    sender = models.ForeignKey(User, on_delete = models.CASCADE)
+    is_seen = models.BooleanField(default = False)
+    timestamp = models.DateTimeField(auto_now_add = True) 
+
+    def __str__(self):
+        return self.content

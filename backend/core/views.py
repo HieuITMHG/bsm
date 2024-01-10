@@ -28,6 +28,12 @@ class RegisterView(APIView):
         if serializer.is_valid():
             user = serializer.save()
             refresh = RefreshToken.for_user(user)
+            
+            groupName = f"notification_{user.id}"
+            group = GroupChat.objects.create(groupName =  groupName, groupType = "group_notification")
+            group.participants.add(user)
+            group.save()
+
             return Response({
                 'refresh': str(refresh),
                 'access': str(refresh.access_token),
@@ -280,10 +286,15 @@ class Addfriend(APIView):
             else:
                 subname = f"{target.id}_{user.id}"
             groupName = f"group_name_{subname}"
-            groupChat = GroupChat.objects.create(groupName = groupName)
+            groupChat = GroupChat.objects.create(groupName = groupName, groupType = "group_chat")
             groupChat.participants.add(user)
             groupChat.participants.add(target)
             groupChat.save()
+
+            groupName2 = f"notification_{user.id}"
+            nogroup = GroupChat.objects.get(groupName = groupName2)
+            nogroup.participants.add(target)
+            nogroup.save()
 
             user.save()
             target.save()

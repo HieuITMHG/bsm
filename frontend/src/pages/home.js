@@ -12,6 +12,28 @@ const Home = (props) => {
     const loadingRef = useRef(true)
     const cuserRef = useRef({})
     const [signal, setSignal] = useState(false);
+    const [reNo, setReNo] = useState(false)
+
+
+    // useEffect(() => {
+    //   const socket = props.socket;
+
+    //   const handleMessage = (event) => {
+    //     const data = JSON.parse(event.data);
+    //     console.log("ok!!")
+    //     if (data.type == "notification") {
+    //         console.log("khung dien")
+    //         console.log(data)
+    //     }
+    //   };
+    
+    //   socket.onmessage = handleMessage;
+    
+    //   return () => {
+    //     // Clean up the event listener when the component unmounts or when socket changes
+    //     socket.onmessage = null;
+    //   };
+    // }, []);
 
   const getUser = () => {
       const access_token = localStorage.getItem("access_token");
@@ -34,6 +56,10 @@ const Home = (props) => {
   useEffect(() => {
     getUser();
   },[])
+
+  useEffect(() => {
+      console.log("it changed")
+  }, [reNo])
 
   
     
@@ -58,10 +84,10 @@ const Home = (props) => {
       }else {
         return (
             <div className='homeContainer'>
-                <Navbar socket = {props.socket}/>
+                <Navbar socket = {props.socket} reNo = {reNo} />
 
                 <div className='mainView'>     
-                    <CreatePost posts = {posts} setPosts = {setPosts}/>
+                    <CreatePost posts = {posts} setPosts = {setPosts} socket = {props.socket}/>
 
                     <div className='postsView'>
                         <ul className="postList">
@@ -74,7 +100,7 @@ const Home = (props) => {
                     
                 </div>
 
-                <Chatapp socket={props.socket} cuser = {cuserRef.current}/>
+                <Chatapp socket={props.socket} cuser = {cuserRef.current} reNo = {reNo} setReNo = {setReNo}/>
 
             </div>
         );

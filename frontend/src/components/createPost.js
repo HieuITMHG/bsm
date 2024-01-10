@@ -76,6 +76,10 @@ const CreatePost = (props) => {
             props.setPosts(prevPosts => [data, ...prevPosts]);
         })
         .catch(error => console.error('Error:', error));
+
+        props.socket.send(JSON.stringify({
+            type : "notification"
+        }))
     };
 
     return (

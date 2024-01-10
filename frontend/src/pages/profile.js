@@ -12,6 +12,7 @@ const Profile = (props) => {
     const [isLoading, setIsLoading] = useState(true)
     const [signal, setSignal] = useState(false)
     const cuserRef = useRef({})
+    const [reNo, setReNo] = useState([])
 
     useEffect(() => {
         fetch(`/api/ppost/${userid}`)
@@ -60,7 +61,7 @@ const Profile = (props) => {
                         </div> 
                     </div>
                 }
-                <Chatapp socket={props.socket} cuser = {cuserRef.current}/>
+                <Chatapp socket={props.socket} cuser = {cuserRef.current} reNo ={reNo} setReNo = {setReNo}/>
             </>
         )
     }

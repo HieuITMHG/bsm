@@ -10,6 +10,7 @@ const FollowingPosts = (props) => {
     const [signal, setSignal] = useState(false)
     const [isLoading, setIsLoading] = useState(true)
     const cuserRef = useRef({})
+    const [reNo, setReNo] = useState([])
 
     useEffect(() => {
         fetch('/api/following/', {
@@ -66,7 +67,7 @@ const FollowingPosts = (props) => {
                 </div>
 
             </div>
-            <Chatapp socket={props.socket} cuser = {cuserRef.current}/>
+            <Chatapp socket={props.socket} cuser = {cuserRef.current} reNo = {reNo} setReNo = {setReNo}/>
         </div> 
     )}
 }

@@ -61,7 +61,6 @@ const websocketconnect = () => {
       console.log("disconnected")
     }
     socketRef.current = newSocket
-  
 
   return () => {
     if (socketRef.current) {
@@ -72,16 +71,21 @@ const websocketconnect = () => {
 }
 
 useEffect(() => {
-  console.log(trigger)
-  checkTokenValidity();
-  websocketconnect();
-  setIsLoading(false)
-  setInterval(checkTokenValidity, 780000);
+  console.log(trigger);
+  
+  const fetchData = async () => {
+    await checkTokenValidity();
+    websocketconnect();
+    setIsLoading(false);
+    setInterval(checkTokenValidity, 780000);
+  };
+
+  fetchData();
 
   return () => {
-      clearInterval(checkTokenValidity);
-  }
-},[trigger])
+    clearInterval(checkTokenValidity);
+  };
+}, [trigger]);
 
   if(isLoading) {
     return (
@@ -94,7 +98,7 @@ useEffect(() => {
           <Routes>
             <Route path='/' element={<Home socket = {socketRef.current}/>} />
             <Route path="/login" element={<LoginView trigger = {trigger} setTrigger = {setTrigger}/>} />
-            <Route path="/people" element={<People />} />
+            <Route path="/people" element={<People socket = {socketRef.current} />} />
             <Route path='/profile/:userid' element={<Profile socket = {socketRef.current}/>} />
             <Route path='/following' element={<FollowingPosts socket = {socketRef.current}/>} />
             <Route path='hehe' element={<UploadAvatar />} />

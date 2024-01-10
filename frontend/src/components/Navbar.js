@@ -3,12 +3,14 @@ import { Link, NavLink, useNavigate } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import '../styles/navBar.css'
 import ProfileOpen from './profileOpen';
+import NotificationList from './notificationlist';
 
 const Navbar = (props) => {
   const navigate = useNavigate();
 
   const [user, setUser] = useState({});
   const [Loading, setLoading] = useState(true)
+  const [open, setOpen] =  useState(false)
 
     useEffect(() => {
         const access_token = localStorage.getItem('access_token');
@@ -35,12 +37,44 @@ const Navbar = (props) => {
       navigate('/login');
   }
 
-  if(!Loading) {
+  const ToggleNotification = () => {
+    setOpen(!open)
+  }
+
+  const [notifications, setNotifications] = useState(null); 
+
+  useEffect(()=> {
+      const access_token = localStorage.getItem('access_token');
+      fetch(`/chat/notification/`, {
+          headers: {
+              Authorization: `Bearer ${access_token}`,
+              'Content-Type': 'application/json',
+          }
+      })
+      .then(response => response.json())
+      .then(data => {
+          setNotifications(data);
+      });
+  }, [props.reNo]);
+
+  useEffect(() => {
+      if (notifications !== null) { 
+          console.log(notifications);
+      }
+  }, [notifications]);
+
+
+
+  if(!Loading && notifications != null) {
     return (
-      <nav className='navBarContainer'>
+      <>
+        <nav className='navBarContainer'>
         <ul>
-          <li className='navItem'>
-          <span className="material-symbols-outlined">notifications</span>
+          <li className='navItem' onClick={ToggleNotification}>
+         
+                <span className="material-symbols-outlined">notifications</span> 
+                <div className='countNotification'>{notifications.length}</div>
+           
           </li>
           <li className='navItem'>
             <ProfileOpen user = {user} socket={props.socket}/>
@@ -65,6 +99,10 @@ const Navbar = (props) => {
           </li>
         </ul>
       </nav>
+
+      {open && <NotificationList notifications = {notifications}/>}
+      </>
+      
     );
   }
 

@@ -2,7 +2,6 @@ import { useEffect, useState,useRef } from "react";
 import ChatBox from "./chatbox";
 
 const Chatapp = (props) => {
-    console.log("render chat app")
     const [isLoading, setIsLoading] = useState(true)
     const [groups, setGroups] = useState([])
     const [message, setMessage] = useState({})
@@ -14,11 +13,11 @@ const Chatapp = (props) => {
 
       const handleMessage = (event) => {
         const data = JSON.parse(event.data);
+        console.log("chat app received")
         if (data.type === "chat_message") {
             setMessage(data.content)
             console.log(data.content)
         }else if (data.type === "online_status") {
-          console.log(`online_status of ${data.onliner_id}: ${data.online_status}`)
             if (data.online_status == true){
               setOnlines(preOnlines => [...preOnlines, data.onliner_id])
             }else{
@@ -28,6 +27,13 @@ const Chatapp = (props) => {
             
         }else if(data.type  === "delete") {
           setDeletedMessages(predele => [...predele, data.message_id])
+        }
+        else if (data.type === "notification"){
+          console.log(data)
+          if(data.notification.sender.id != props.cuser.id) {
+            console.log("vcl")
+            props.setReNo(!props.reNo)
+          }
         }
       };
     

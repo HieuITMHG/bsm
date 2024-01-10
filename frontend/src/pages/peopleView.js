@@ -3,10 +3,11 @@ import UserCard from "../components/userCard";
 import Navbar from "../components/Navbar";
 import '../styles/Home.css'
 
-const People = () => {
+const People = (props) => {
 
     const [users, setUsers] = useState([])
     const accessToken = localStorage.getItem('access_token');
+    const [reNo, setReNo] = useState([])
     
 
     useEffect(() => {
@@ -25,7 +26,7 @@ const People = () => {
 
     return (
         <>
-        <Navbar />
+        <Navbar socket = {props.socket}/>
             <div className="userListContaier">
                     {users.map(user => (           
                             <UserCard user = {user} key={user.id}/>
