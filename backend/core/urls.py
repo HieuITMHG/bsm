@@ -5,7 +5,6 @@ from rest_framework import routers
 router = routers.DefaultRouter()
 
 router.register(r'users', views.PeopleView, basename='users')
-router.register(r'post', views.SinglePost, basename='post')
 
 urlpatterns = [
     path('register/', views.RegisterView.as_view(), name='token_register'),
@@ -26,5 +25,6 @@ urlpatterns = [
     path('addfriend/',  views.Addfriend.as_view(), name = 'addfriend'),
     path('unfriend/', views.Unfriend.as_view(), name = 'unfriend'),
     path('following/<int:userid>/', views.followingView.as_view(), name='following'),
-    path('follower/<int:userid>/', views.followerView.as_view(), name='follower')
+    path('follower/<int:userid>/', views.followerView.as_view(), name='follower'),
+    path('post/<int:post_id>', views.SinglePost.as_view(), name='post')
 ]+router.urls

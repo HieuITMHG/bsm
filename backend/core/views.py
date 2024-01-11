@@ -7,14 +7,18 @@ from .serializers import UserSerializer, PostSerializer, FollowSerializer
 from rest_framework.permissions import IsAuthenticated
 from rest_framework import viewsets, status,permissions
 from core.models import User, Post, Media
-from chat.models import GroupChat
+from chat.models import GroupChat, Notification, Message
+from chat.serializer import GroupChatSerializer, NotificationSerializer, MessageSerializer
 from rest_framework.parsers import MultiPartParser, FormParser
 import os
+from django.shortcuts import  get_object_or_404
 from django.conf import settings
 import base64
 from django.core.files.base import ContentFile
 import random
 import string
+from asgiref.sync import async_to_sync
+from channels.layers import get_channel_layer
 
 
 def generate_random_string(length):
@@ -97,6 +101,32 @@ class PostView(APIView):
             media = Media.objects.create(post=post, file=media_file)
             media.save()
 
+
+        # notification
+            
+        print("received notification")
+        groupName = f"notification_{request.user.id}"
+        group = GroupChat.objects.get(groupName = groupName)
+        notification = Notification.objects.create(sender = request.user, content = f"{request.user.username} has posted a new post", is_seen = False, groupChat = group, post_id = post.id)
+        friends = request.user.friends.all()
+        for fri in friends:
+            notification.receiver.add(fri)
+        notification.save()
+
+        serializer_data = NotificationSerializer(notification).data
+
+        channel = get_channel_layer()
+        print(channel)
+        async_to_sync(channel.group_send)(
+                groupName,
+                {
+                    'type' : 'notification',
+                    'notification': serializer_data,
+                    'post_id' : post.id
+                
+                }
+            )
+
         serializer = PostSerializer(post)
         return Response(serializer.data, status=status.HTTP_201_CREATED)
     
@@ -122,9 +152,13 @@ class PostView(APIView):
         
 
     
-class SinglePost(viewsets.ModelViewSet):
-    serializer_class = PostSerializer
-    queryset = Post.objects.all()
+class SinglePost(APIView):
+    def get(self, request, post_id):
+        post = get_object_or_404(Post, pk = post_id)
+        serializer = PostSerializer(post)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+        
     
 class Follow(APIView):
     permission_classes = [IsAuthenticated]
@@ -261,6 +295,33 @@ class CommentView(APIView):
             print(media_file)
             media = Media.objects.create(post=post, file=media_file)
             media.save()
+
+        print("received notification")
+        if parent_post.creater.id != request.user.id:
+            groupName  = ""
+            if parent_post.creater.id < request.user.id:
+                groupName = f"group_name_{parent_post.creater.id}_{request.user.id}"
+            else:
+                groupName = f"group_name_{request.user.id}_{parent_post.creater.id}"
+                group = GroupChat.objects.get(groupName = groupName)
+                notification = Notification.objects.create(sender = request.user, content = f"{request.user.username} has commented your post", is_seen = False, groupChat = group, post_id = parent_post_id)
+
+                notification.receiver.add(parent_post.creater)
+                notification.save()
+
+                serializer_data = NotificationSerializer(notification).data
+
+                channel = get_channel_layer()
+                print(channel)
+                async_to_sync(channel.group_send)(
+                        groupName,
+                        {
+                            'type' : 'notification',
+                            'notification': serializer_data,
+                            'post_id' : post.id
+                        
+                        }
+                    )
 
         serializer = PostSerializer(post)
         return Response(serializer.data, status=status.HTTP_201_CREATED)

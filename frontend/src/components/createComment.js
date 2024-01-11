@@ -76,6 +76,14 @@ const CreateComment = (props) => {
         .catch(error => console.error('Error:', error));
     };
 
+    const handleCancelMedia = (mediaItem) => {
+        const updatedMedia = formData.media.filter(item => item !== mediaItem);
+        setFormData(prevFormData => ({
+          ...prevFormData,
+          media: updatedMedia
+        }));
+      };
+
     return (
         <div className="commentCreator x" >
             <div className="triggerComment x" onClick={togglehehe}>
@@ -99,16 +107,30 @@ const CreateComment = (props) => {
                                     <div className='c'>{props.post.caption}</div>
                                 </div>
                             </div>
-                        <textarea onChange={handleChange} name="caption" id="caption" className="caption x" autoFocus rows={1}/>
+                        <span onInput={handleChange} role="textbox" className="caption x" rows={1} contentEditable autoFocus></span>
                         <div>
                             {formData.media.map((media, index) => (
-                                <img
-                                    key={index}
-                                    src={URL.createObjectURL(media)}
-                                    alt={`selected-image-${index}`}
-                                    style={{ maxWidth: '100px', maxHeight: '100px', margin: '5px' }}
+                            <div key={`kdlkdj_${index}`} className="uuu">
+                            <span className="material-symbols-outlined x" onClick={() => handleCancelMedia(media)}>close</span>
+                            {media.type.startsWith('image/') ? (
+                                <img className="x"
+                                src={URL.createObjectURL(media)}
+                                alt={`selected-image-${index}`}
+                                style={{ maxWidth: '100px', maxHeight: '100px', margin: '5px' }}
                                 />
-                            ))}
+                            ) : media.type.startsWith('video/') || media.type.endsWith('.mp4') ? (
+                                <video className="x"
+                                src={URL.createObjectURL(media)}
+                                alt={`selected-video-${index}`}
+                                style={{ maxWidth: '100px', maxHeight: '100px', margin: '5px' }}
+                                controls
+                                />
+                            ) : (
+                                <p>Unsupported media type</p>
+                            )}
+                            </div>
+                        ))}
+                            
                         </div>
                         <div className="controller x">
                             <div className="x">

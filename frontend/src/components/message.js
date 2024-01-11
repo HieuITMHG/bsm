@@ -7,6 +7,7 @@ const Message = (props) => {
 
 
     useEffect(() => {
+        console.log(props.message)
         if(props.user.id == props.message.sender.id) {
             setIsUser(true)
         }else {
@@ -37,24 +38,49 @@ const Message = (props) => {
     }else {
         return (
             <div className={isUser ? 'messageContainer mright' : 'messageContainer mleft'}>
-                {isOpen &&
-                    <div className="deleteMessageOptionBoardOverlay">
-                        <div className="deleteMessageOptionBoard">
-                            <button onClick={handeCancel}>Cancel</button>
-                            <button onClick={handleDelete}>Delete</button>
-                        </div>
-                    </div>
-                }
-                {isUser && <span className="material-symbols-outlined delete-message-btn" onClick={handeCancel}>delete</span>}
-                {!isUser && (
-                    <div className="avatarContainer profileAvatar ">
-                        <img src={props.message.sender.avatar.file} alt="avatar" className="avatar"/>
-                    </div>
-                )}
-                
-                <div className="contentContainer">
-                    <p>{props.message.content}</p>
+
+                <div className="imgContainer">
+                    {props.message.messageMedia.length != 0 &&
+                        <>
+                            {
+                                props.message.messageMedia.map(media => (
+                                    <div className="messageMediaContainer" key={`message_media_${media.id}`}>
+                                
+                                    {media.file.endsWith('.mp4') || media.file.endsWith('.webm') || media.file.endsWith('mov')? 
+                                        <video src={media.file} controls alt='video' className='media' />
+                                        :
+                                        <img src={media.file} alt='image' className='media' />
+                                    }
+                            
+                                    </div>
+                                ))
+                            }
+                        </>
+                    }
                 </div>
+
+                <div className="textContentContainer">
+                    {isOpen &&
+                        <div className="deleteMessageOptionBoardOverlay">
+                            <div className="deleteMessageOptionBoard">
+                                <button onClick={handeCancel}>Cancel</button>
+                                <button onClick={handleDelete}>Delete</button>
+                            </div>
+                        </div>
+                    }
+                    {isUser && <span className="material-symbols-outlined delete-message-btn" onClick={handeCancel}>delete</span>}
+                    {!isUser && (
+                        <div className="avatarContainer profileAvatar ">
+                            <img src={props.message.sender.avatar.file} alt="avatar" className="avatar"/>
+                        </div>
+                    )}
+                    
+                    {props.message.content != "" &&
+                    <div className="contentContainer">
+                        <p>{props.message.content}</p>
+                    </div>}
+                    
+                </div> 
             </div>
         )
     }

@@ -1,8 +1,9 @@
 import { useState, useEffect } from "react";
 import Notification from "./notification";
+import { NavLink } from "react-router-dom";
 
 const NotificationList = (props) => {
-   
+    console.log(props.notifications)
 
     if (props.notifications === null) { 
         return (
@@ -14,7 +15,9 @@ const NotificationList = (props) => {
                 <div className="insider">
                     {
                         props.notifications.map(noti => (
-                            <Notification key = {`notification_${noti.id}`} notification = {noti}/>
+                            <NavLink to={`/post/${noti.post_id}`} key = {`notification_${noti.id}`}>
+                                <Notification  notification = {noti}/>
+                            </NavLink>  
                         ))
                     }    
                 </div>

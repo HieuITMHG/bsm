@@ -7,7 +7,8 @@ const Chatapp = (props) => {
     const [message, setMessage] = useState({})
     const [onlines, setOnlines] = useState([])
     const [deletedMessages, setDeletedMessages] = useState([])
-      
+    const [filteredGroups, setFilteredGroups] = useState([])
+
     useEffect(() => {
       const socket = props.socket;
 
@@ -31,8 +32,13 @@ const Chatapp = (props) => {
         else if (data.type === "notification"){
           console.log(data)
           if(data.notification.sender.id != props.cuser.id) {
-            console.log("vcl")
             props.setReNo(!props.reNo)
+              alert = document.querySelector('.notification-alert')
+              alert.style.display='flex'
+              alert.innerText = data.notification.content
+              setTimeout(() => {
+                alert.style.display = 'none'
+              }, 2000);
           }
         }
       };
@@ -57,6 +63,8 @@ const Chatapp = (props) => {
             .then((response) => response.json())
             .then((data) => {
               setGroups(data)
+              setFilteredGroups(data)
+              console.log(data)
             })
             .catch((error) => console.error("Error:", error));
 
@@ -70,6 +78,32 @@ const Chatapp = (props) => {
           }
       }, []);
 
+      const handleChange = (e) => { 
+        const searchTerm = e.target.value;
+
+        if(searchTerm == ""){
+          setFilteredGroups(groups)
+          return;
+        }
+    
+        const filteredItems = groups.filter((group) => {
+          let friend = {};
+          if(group.participants[0].id != props.cuser.id) {
+            friend = group.participants[0]
+          }else {
+            friend = group.participants[1]
+          }
+
+          return friend.username.toLowerCase().includes(searchTerm.toLowerCase())
+        }
+          
+        );
+
+        console.log(filteredItems)
+    
+        setFilteredGroups(filteredItems);
+      }
+
     if(isLoading) {
         return (
             <div>loading</div>
@@ -77,16 +111,17 @@ const Chatapp = (props) => {
     }else {
         return (
             <div className="chatAppContainer">
+              <div className="notification-alert"  style={{display:'none'}}></div>
 
               <div className="searchFriend">
 
-                <input></input>
+                <input onChange={handleChange}></input>
                 <div className="searchBtn"><span className="material-symbols-outlined">search</span></div>
                 
               </div>
 
               {
-                groups.map(group => (
+                filteredGroups.map(group => (
                   <div key={`chatbox_${group.id}`} >
                     {props.cuser.id != group.participants[0].id ? 
                       <ChatBox sender = {props.cuser} receiver={group.participants[0]} socket = {props.socket} group = {group} mes = {message} onlines = {onlines} deletedMessages = {deletedMessages}/>:

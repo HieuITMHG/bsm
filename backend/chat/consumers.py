@@ -62,46 +62,8 @@ class ChatConsumer(WebsocketConsumer):
     def receive(self, text_data):
         print("BIG FAN SIR")
         data_json = json.loads(text_data)
-        type = data_json['type']
-        if type == "chat_message":       
-            content = data_json['content']    
-            receiver_id = data_json['receiver_id']    
-            print(content)
-            print(receiver_id)
-            receiver = User.objects.get(pk=receiver_id)
-            print("got receiver")
-
-            message = Message.objects.create(
-                sender = self.user,
-                content = content
-            )
-            message.receiver.add(receiver)
-            message.save()
-
-            serializer_data  = MessageSerializer(message).data
-            
-            subname =  ""
-            if self.user.id < receiver.id:
-                subname =  f"{self.user.id}_{receiver.id}"
-            else:
-                subname = f"{receiver.id}_{self.user.id}"
-            groupName = f"group_name_{subname}"
-
-            groupChat = GroupChat.objects.get(groupName = groupName)
-
-            groupChat.messages.add(message)
-
-            groupChat.save()
-            
-            async_to_sync(self.channel_layer.group_send)(
-                groupChat.groupName,
-                {
-                    'group':groupChat.groupName,
-                    'type': type,
-                    'content': serializer_data,
-                }
-            )
-        elif type == "update":
+        type = data_json['type']     
+        if type == "update":
             typing_status = data_json['typing_status']
             who = data_json['who']
             async_to_sync(self.channel_layer.group_send)(
@@ -133,25 +95,8 @@ class ChatConsumer(WebsocketConsumer):
                     'message_id': message_id
                 }
             )
-        elif type == "notification":
-            print("received notification")
-            groupName = f"notification_{self.user.id}"
-            group = GroupChat.objects.get(groupName = groupName)
-            notification = Notification.objects.create(sender = self.user, content = f"{self.user} has posted a new post", is_seen = False, groupChat = group)
-            friends = self.user.friends.all()
-            for fri in friends:
-                notification.receiver.add(fri)
-            notification.save()
 
-            serializer_data = NotificationSerializer(notification).data
-
-            async_to_sync(self.channel_layer.group_send)(
-                groupName,
-                {
-                    'type' : type,
-                    'notification': serializer_data
-                }
-            )
+            
 
 
     def chat_message(self, event):
@@ -194,7 +139,9 @@ class ChatConsumer(WebsocketConsumer):
     def notification(self, event):
         print("prepared to send notifation")
         notification = event['notification']
+        post_id = event['post_id']
         self.send(text_data=json.dumps({
             'type' : "notification",
-            'notification' : notification
+            'notification' : notification,
+            'post_id' : post_id
         }))

@@ -142,15 +142,15 @@ export default MyComponent;
 //         }
 //       }, []);
 
-//       const handleChange = (e) => { 
-//         const searchTerm = e.target.value;
+      // const handleChange = (e) => { 
+      //   const searchTerm = e.target.value;
     
-//         const filteredItems = friendsRef.current.filter((friend) =>
-//           friend.username.toLowerCase().includes(searchTerm.toLowerCase())
-//         );
+      //   const filteredItems = friendsRef.current.filter((friend) =>
+      //     friend.username.toLowerCase().includes(searchTerm.toLowerCase())
+      //   );
     
-//         setFilteredFriends(filteredItems);
-//       }
+      //   setFilteredFriends(filteredItems);
+      // }
     
 
 //     if(loadingRef.current) {

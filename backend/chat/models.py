@@ -7,7 +7,7 @@ from core.models import User
 class Message(models.Model):
     sender = models.ForeignKey(User, on_delete=models.CASCADE, related_name='sent_messages')
     receiver = models.ManyToManyField(User, related_name='received_messages')
-    content = models.CharField(max_length=200, blank=False)
+    content = models.CharField(max_length=200, blank=False, null = True)
     timestamp = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
@@ -23,6 +23,7 @@ class GroupChat(models.Model):
         return self.groupName
 
 class Notification(models.Model):
+    post_id =  models.IntegerField(blank = True, null = True)
     receiver = models.ManyToManyField(User, blank=True, related_name='received_notification')
     groupChat = models.ForeignKey('GroupChat', on_delete =  models.CASCADE, related_name = 'sent_notification')
     content = models.CharField(max_length = 100)
@@ -31,4 +32,11 @@ class Notification(models.Model):
     timestamp = models.DateTimeField(auto_now_add = True) 
 
     def __str__(self):
-        return self.content
+         return self.timestamp.strftime('%H:%M %d/%m/%Y')
+    
+class MessageMedia(models.Model):
+    message = models.ForeignKey('Message', related_name='messageMedia', on_delete=models.CASCADE, blank=True, null=True)
+    file = models.FileField()
+
+    def __str__(self):
+        return f"{self.id} : {self.file.url}"

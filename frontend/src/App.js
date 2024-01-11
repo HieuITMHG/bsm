@@ -102,7 +102,7 @@ useEffect(() => {
             <Route path='/profile/:userid' element={<Profile socket = {socketRef.current}/>} />
             <Route path='/following' element={<FollowingPosts socket = {socketRef.current}/>} />
             <Route path='hehe' element={<UploadAvatar />} />
-            <Route path='/post/:postid' element={<SinglePost />} />
+            <Route path='/post/:postid' element={<SinglePost socket = {socketRef.current}/>} />
             <Route path='/followings/:userid' element={<FollowingsView />} />
             <Route path='/followers/:userid' element = {<FollowersView />} />
             <Route path='/test/' element = {<MyComponent />} />

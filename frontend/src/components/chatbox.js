@@ -7,17 +7,49 @@ function ChatBox(props) {
   const [isOpen, setIsOpen] = useState(false)
   const [group, setGroup] = useState({})
   const [isLoading, setIsLoading] = useState(true)
+  const [media, setMedia] = useState([])
 
-  const sendMessage = () => {
-    const data = {
-      receiver_id : props.receiver.id,
-      content: message,
-      type: 'chat_message'
-    };
-    props.socket.send(JSON.stringify(data));
-    setMessage('');
-    setIsOpen(true)
-  };
+  const handleSendMessage = (e) => {
+        e.preventDefault();
+
+        const token = localStorage.getItem('access_token');
+        const formdata = new FormData();
+
+        // Add caption and media to the FormData
+        media.forEach(file => {
+            formdata.append('media', file);
+        });
+
+        formdata.append(`receiver_id`, props.receiver.id)
+        formdata.append('content', message)
+
+        fetch('/chat/message/', {
+            method: 'POST',
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+            body: formdata
+        })
+        .then(response => response.json())
+        .then(data => {
+            console.log(data)
+            setMessage('');
+            setIsOpen(true)
+        })
+        .catch(error => console.error('Error:', error));
+
+  }
+
+  // const sendMessage = () => {
+  //   const data = {
+  //     receiver_id : props.receiver.id,
+  //     content: message,
+  //     type: 'chat_message'
+  //   };
+  //   props.socket.send(JSON.stringify(data));
+  //   setMessage('');
+  //   setIsOpen(true)
+  // };
 
   const handleOpen = () => {
     setIsOpen(!isOpen)
@@ -41,6 +73,22 @@ function ChatBox(props) {
   const onlineStyle = {
     color : 'green'
   }
+
+  const handlemediachange = (e) => {
+      const files = e.target.files
+      const Arraymedia = Array.from(files)
+      setMedia(Arraymedia)
+  }
+
+  const handleCancelMedia = (medi) => {
+      const updatedItems = media.filter(item => item !== medi);
+      setMedia(updatedItems)
+  }
+
+  useEffect(() => {
+      console.log(message)
+  }, [message])
+
 
   if(isLoading) {
     return (
@@ -69,13 +117,52 @@ function ChatBox(props) {
                   ))}
               </div>
           {/* enter message */}
+          <div className='imgBoard'>
+  {media.map((media, index) => (
+    <div className='uuu'  key={`kdlkdj_${index}`}>
+      <span className="material-symbols-outlined" onClick={() => handleCancelMedia(media)}>close</span>
+      {media.type.startsWith('image/') ? (
+        <img
+          src={URL.createObjectURL(media)}
+          alt={`selected-image-${index}`}
+          style={{ maxWidth: '100px', maxHeight: '100px', margin: '5px' }}
+        />
+      ) : media.type.startsWith('video/') ? (
+        <video
+          src={URL.createObjectURL(media)}
+          alt={`selected-video-${index}`}
+          style={{ maxWidth: '100px', maxHeight: '100px', margin: '5px' }}
+          controls
+        />
+      ) : (
+        <p>Unsupported media type</p>
+      )}
+    </div>
+  ))}
+</div>
           <div className='sendMessageContainer'>
-            <span className="material-symbols-outlined">attach_file</span>
-            <input type="text" value={message} onChange={(e) => setMessage(e.target.value)} className='message_input'/>         
-            <button onClick={sendMessage} style={{ display: 'none' }} id='sendMessageBtn'>Send</button>
-            <label htmlFor='sendMessageBtn' style={{display: 'flex', alignItems:'center', cursor:'pointer'}}>
-              <span className="material-symbols-outlined">send</span>
+            <input id='message-media' style={{display : 'none'}} type='file' multiple onChange={handlemediachange} accept="image/*, video/*" />
+            <label htmlFor='message-media' >
+              <span className="material-symbols-outlined ttt">attach_file</span>
             </label>
+            <span onInput={(e) => setMessage(e.target.textContent)} role="textbox" className="caption x" rows={1} contentEditable autoFocus></span>       
+            
+            {(media == [] && message == '') ?
+              <>
+                  <button style={{ display: 'none' }} id='sendMessageBtn'>Send</button>
+                  <label htmlFor='sendMessageBtn' style={{display: 'flex', alignItems:'center', cursor:'pointer'}}>
+                    <span className="material-symbols-outlined">send</span>
+                  </label>
+              </>
+               :
+               <>
+                  <button onClick={handleSendMessage} style={{ display: 'none' }} id='sendMessageBtn'>Send</button>
+                  <label htmlFor='sendMessageBtn' style={{display: 'flex', alignItems:'center', cursor:'pointer'}}>
+                      <span className="material-symbols-outlined ttt">send</span>
+                  </label>
+               </>
+            }
+            
           </div>
           {/* end enter message */}
         </div>
