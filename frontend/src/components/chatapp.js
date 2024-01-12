@@ -68,11 +68,13 @@ const Chatapp = (props) => {
             })
             .catch((error) => console.error("Error:", error));
 
-            props.cuser.friends.map(friend => {
+            if(props.cuser != undefined && props.cuser.friends !=undefined) {
+              props.cuser.friends.map(friend => {
               if(friend.online_status == true) {
                   setOnlines(preOnlines => [...preOnlines, friend.id])
               }
             })
+          }
 
             setIsLoading(false)
           }
@@ -121,15 +123,18 @@ const Chatapp = (props) => {
               </div>
 
               {
-                filteredGroups.map(group => (
-                  <div key={`chatbox_${group.id}`} >
-                    {props.cuser.id != group.participants[0].id ? 
-                      <ChatBox sender = {props.cuser} receiver={group.participants[0]} socket = {props.socket} group = {group} mes = {message} onlines = {onlines} deletedMessages = {deletedMessages}/>:
-                      <ChatBox sender = {props.cuser} receiver={group.participants[1]} socket = {props.socket} group = {group} mes = {message} onlines = {onlines} deletedMessages = {deletedMessages}/>
-                    }
-                  </div>
-                                                                
-                ))
+                filteredGroups != undefined && 
+        
+                    filteredGroups.map(group => (
+                      <div key={`chatbox_${group.id}`} >
+                        {props.cuser.id != group.participants[0].id ? 
+                          <ChatBox sender = {props.cuser} receiver={group.participants[0]} socket = {props.socket} group = {group} mes = {message} onlines = {onlines} deletedMessages = {deletedMessages}/>:
+                          <ChatBox sender = {props.cuser} receiver={group.participants[1]} socket = {props.socket} group = {group} mes = {message} onlines = {onlines} deletedMessages = {deletedMessages}/>
+                        }
+                      </div>
+                                                                    
+                    ))
+          
               }
               <div className="message_input"></div>
             </div>
@@ -140,3 +145,5 @@ const Chatapp = (props) => {
 }   
 
 export default Chatapp;
+
+

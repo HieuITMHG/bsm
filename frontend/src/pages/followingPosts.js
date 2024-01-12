@@ -54,7 +54,7 @@ const FollowingPosts = (props) => {
         )
     }else {
     return (
-        <div>
+        <div className="homeContainer">
             <Navbar socket = {props.socket}/>
             <div className="mainView">
             

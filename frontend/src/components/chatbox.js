@@ -35,6 +35,9 @@ function ChatBox(props) {
             console.log(data)
             setMessage('');
             setIsOpen(true)
+            setMedia([])
+            const mes = document.querySelector('.caption')
+            mes.textContent = ""
         })
         .catch(error => console.error('Error:', error));
 
@@ -103,6 +106,7 @@ function ChatBox(props) {
           <div className='headerChat'>
             <span className="material-symbols-outlined" onClick={handleOpen}>arrow_back_ios</span>
             <ProfileOpen user = {props.receiver}/>
+            <span className="material-symbols-outlined" style={props.onlines.includes(props.receiver.id) ? onlineStyle : null}>fiber_manual_record</span>
           </div>
           {/* end header */}
   

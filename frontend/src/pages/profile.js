@@ -47,7 +47,7 @@ const Profile = (props) => {
         )
     }else {
         return (
-            <>
+            <div className="homeContainer">
                 <Navbar socket = {props.socket}/>
                 {!isLoading && 
                     <div className='mainView'>    
@@ -62,7 +62,7 @@ const Profile = (props) => {
                     </div>
                 }
                 <Chatapp socket={props.socket} cuser = {cuserRef.current} reNo ={reNo} setReNo = {setReNo}/>
-            </>
+            </div>
         )
     }
 

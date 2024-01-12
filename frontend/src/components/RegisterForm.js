@@ -32,7 +32,15 @@ const RegisterForm = ({toggleForm}) => {
                 localStorage.setItem('refresh_token', data.refresh);
                 toggleForm();
             } else {
-                console.log(data);
+                const key = Object.keys(data)[0]
+                const err = data[key][0]
+
+                const alert = document.querySelector('.errorAlert')
+                alert.style.display = 'block'
+                alert.textContent = err
+                setTimeout(()=> {
+                    alert.style.display = 'none'
+                }, 2000)
             }
         })
         .catch(error => console.error('Error:', error));}
@@ -40,6 +48,7 @@ const RegisterForm = ({toggleForm}) => {
 
     return(
         <div className='registerContainer'>
+            <div class="alert alert-warning errorAlert" style={{display: 'none'}}><strong>Warning!</strong></div>
             <h1>Register</h1>
             <form>
                 <input autoFocus placeholder="Username" name='username' onChange={handleChange} />

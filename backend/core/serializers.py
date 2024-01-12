@@ -1,5 +1,8 @@
 from rest_framework import serializers
 from core.models import User, Post, Media
+from django.core.validators import validate_email
+from django.core.exceptions import ValidationError
+from django.contrib.auth.password_validation import validate_password as django_validate_password
 
 
 class MediaSerializer(serializers.ModelSerializer):
@@ -23,15 +26,44 @@ class UserSerializer(serializers.ModelSerializer):
     addfriend = serializers.PrimaryKeyRelatedField(many=True, read_only=True)
     class Meta:
         model = User
-        fields = ['id', 'username', 'email', 'password', 'follow', 'followed_by', 'avatar', 'aboutme', 'friends', 'addfriend_by', 'addfriend', 'online_status']
+        fields = ['id', 'username', 'email','password', 'follow', 'followed_by', 'avatar', 'aboutme', 'friends', 'addfriend_by', 'addfriend', 'online_status']
 
         extra_kwargs = {
             'password' : {'write_only' : True},
         }
 
     def validate_email(self, value):
-        if not value:
-            raise serializers.ValidationError("Email may not be blank.")
+        print("o0o0o0o0o0o VALUE HERE o0o00oo0o0o00oo0")
+        print(value)
+        try:
+            validate_email(value)
+        except ValidationError:
+            raise serializers.ValidationError("Invalid email format.")
+
+        # Check if the email is already in use
+        if User.objects.filter(email=value).exists():
+            raise serializers.ValidationError("This email is already in use.")
+
+        return value
+    
+    def validate_password(self, value):
+        print("o0o0o0o0o0o VALUE HERE o0o00oo0o0o00oo0")
+        print(value)
+        try:
+            django_validate_password(value)
+        except ValidationError as e:
+            raise serializers.ValidationError(str(e))
+
+        # Additional custom password criteria (e.g., minimum length, must contain letters and digits)
+        if len(value) < 8:
+            raise serializers.ValidationError("Password must be at least 8 characters long.")
+
+        if not any(char.isalpha() for char in value):
+            raise serializers.ValidationError("Password must contain at least one letter.")
+
+        if not any(char.isdigit() for char in value):
+            raise serializers.ValidationError("Password must contain at least one digit.")
+
         return value
     
     def create(self, validated_data):

@@ -11,6 +11,7 @@ const Navbar = (props) => {
   const [user, setUser] = useState({});
   const [Loading, setLoading] = useState(true)
   const [open, setOpen] =  useState(false)
+  const [num, setNum] = useState(0)
 
     useEffect(() => {
         const access_token = localStorage.getItem('access_token');
@@ -53,17 +54,18 @@ const Navbar = (props) => {
       })
       .then(response => response.json())
       .then(data => {
+        console.log(data)
           setNotifications(data);
+          let haha = 0;
+          data.map(not => {
+            if(not.is_seen == false) {
+              haha = haha+1;
+              console.log(haha)
+            }
+          })
+          setNum(haha)
       });
   }, [props.reNo]);
-
-  useEffect(() => {
-      if (notifications !== null) { 
-          console.log(notifications);
-      }
-  }, [notifications]);
-
-
 
   if(!Loading && notifications != null) {
     return (
@@ -73,7 +75,7 @@ const Navbar = (props) => {
           <li className='navItem' onClick={ToggleNotification}>
          
                 <span className="material-symbols-outlined">notifications</span> 
-                <div className='countNotification'>{notifications.length}</div>
+                <div className='countNotification'>{num}</div>
            
           </li>
           <li className='navItem'>
@@ -81,7 +83,7 @@ const Navbar = (props) => {
           </li>
           <li className='navItem'>
             <NavLink to="/" >
-              <span className="material-symbols-outlined">home</span>
+               <span className="material-symbols-outlined">home</span>       
             </NavLink>
           </li>
           <li className='navItem'>

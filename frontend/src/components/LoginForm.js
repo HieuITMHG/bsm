@@ -33,20 +33,23 @@ const LoginForm = (props) => {
                 props.setTrigger(!props.trigger)
                 navigate('/');
             } else {
-                console.log(data['error']);
-                const alert = document.querySelector(".alert-warning");
-                alert.innerHTML = data['error'];
-                alert.style.display = 'block';
-                setTimeout(() => {
-                    alert.style.display = 'none';
-                }, 2000);
+                const key = Object.keys(data)[0]
+                const err = data[key]
+                console.log(err)
 
+                const alert = document.querySelector('.errorAlert')
+                alert.style.display = 'block'
+                alert.textContent = err
+                setTimeout(()=> {
+                    alert.style.display = 'none'
+                }, 2000)
             }
         })
         .catch(error => console.error('Error:', error));}
 
     return (
         <div className="loginFormContainer">
+            <div class="alert alert-warning errorAlert" style={{display: 'none'}}><strong>Warning!</strong></div>
             <h1>Login</h1>
             <form>
                 <input autoFocus placeholder="Username" name="username" onChange={handleChange} />

@@ -51,8 +51,7 @@ class LoginView(APIView):
         password = request.data.get('password')
 
         user = authenticate(username=username, password=password)
-        print(f"is_authenticated: ${user.is_authenticated}")
-        if user.is_authenticated:
+        if user is not None:
             refresh = RefreshToken.for_user(user)
             return Response({
                 'refresh': str(refresh),
@@ -106,6 +105,7 @@ class PostView(APIView):
             
         print("received notification")
         groupName = f"notification_{request.user.id}"
+        print(groupName)
         group = GroupChat.objects.get(groupName = groupName)
         notification = Notification.objects.create(sender = request.user, content = f"{request.user.username} has posted a new post", is_seen = False, groupChat = group, post_id = post.id)
         friends = request.user.friends.all()
@@ -274,9 +274,12 @@ class BioView(APIView):
         bio = request.data.get("bio")
 
         if bio is not None:
-            request.user.aboutme = bio
-            request.user.save()
-            return Response({"updated"}, status= status.HTTP_200_OK)
+            if len(bio) > 100:
+                return Response({"Bio must be less than 100 digits"}, status=status.HTTP_400_BAD_REQUEST)
+            else:
+                request.user.aboutme = bio
+                request.user.save()
+                return Response({"updated"}, status= status.HTTP_200_OK)
         else:
             return Response({"error": "Bio data is missing"}, status=status.HTTP_400_BAD_REQUEST)
 

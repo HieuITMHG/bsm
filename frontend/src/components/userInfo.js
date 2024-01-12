@@ -83,8 +83,16 @@ const UserInfo = (props) => {
                     })
                     .then(response => response.json())
                     .then(data => {
-                        setHihi(false)
-                        console.log(data)
+                        
+                        const alert = document.querySelector('.updatedAlert')
+                        alert.textContent = data[0]
+                        if(data[0]=="updated") {
+                            setHihi(false)
+                        }
+                        alert.style.display = 'block'
+                        setTimeout(() => {
+                            alert.style.display = 'none'
+                        }, 2000);
                     })
                 }
             }
@@ -146,7 +154,8 @@ const UserInfo = (props) => {
                             }</div>
                         ) :
                             (<div className="triggerContainer"> {bio} </div>) 
-                        }                                             
+                        }         
+                        <p className="updatedAlert" style={{display : 'none'}}></p>                                    
                     </div>
             </div>
         )
