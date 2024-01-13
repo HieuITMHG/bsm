@@ -58,7 +58,7 @@ const UserInfo = (props) => {
             let handler = (e) => {
                 if (toggleForm && e.target.classList.contains('x')) {
                     settoggleForm(false);
-                    console.log("close")
+           
                 }
             }
             
@@ -110,7 +110,7 @@ const UserInfo = (props) => {
 
     const handleHihi = () => {
         setHihi(true);
-        console.log(hihi)
+    
     }
 
     if (loading) {

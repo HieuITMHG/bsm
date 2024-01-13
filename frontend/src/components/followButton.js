@@ -40,7 +40,7 @@ const FollowButton = ({ user }) => {
     })
       .then((response) => response.json())
       .then((data) => {
-        console.log(data);
+      
         setAction(true); // User is now followed
       })
       .catch((error) => console.error("Error:", error));
@@ -58,7 +58,7 @@ const FollowButton = ({ user }) => {
     })
       .then((response) => response.json())
       .then((data) => {
-        console.log(data);
+      
         setAction(false); // User is now unfollowed
       })
       .catch((error) => console.error("Error:", error));

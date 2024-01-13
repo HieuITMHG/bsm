@@ -7,7 +7,7 @@ const Message = (props) => {
 
 
     useEffect(() => {
-        console.log(props.message)
+
         if(props.user.id == props.message.sender.id) {
             setIsUser(true)
         }else {

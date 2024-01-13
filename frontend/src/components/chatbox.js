@@ -32,7 +32,6 @@ function ChatBox(props) {
         })
         .then(response => response.json())
         .then(data => {
-            console.log(data)
             setMessage('');
             setIsOpen(true)
             setMedia([])
@@ -87,11 +86,6 @@ function ChatBox(props) {
       const updatedItems = media.filter(item => item !== medi);
       setMedia(updatedItems)
   }
-
-  useEffect(() => {
-      console.log(message)
-  }, [message])
-
 
   if(isLoading) {
     return (

@@ -63,7 +63,6 @@ class LoginView(APIView):
 class LogoutView(APIView):
     def post(self, request):
         refresh_token = request.data.get('refresh_token')
-        print(refresh_token)
         try:
             RefreshToken(refresh_token).blacklist()
             return Response({'message': 'Successfully logged out.'}, status=200)
@@ -96,16 +95,15 @@ class PostView(APIView):
         post = Post.objects.create(creater=request.user, caption=caption)
 
         for media_file in media_files:
-            print(media_file)
             media = Media.objects.create(post=post, file=media_file)
             media.save()
 
 
         # notification
             
-        print("received notification")
+    
         groupName = f"notification_{request.user.id}"
-        print(groupName)
+   
         group = GroupChat.objects.get(groupName = groupName)
         notification = Notification.objects.create(sender = request.user, content = f"{request.user.username} has posted a new post", is_seen = False, groupChat = group, post_id = post.id)
         friends = request.user.friends.all()
@@ -116,7 +114,7 @@ class PostView(APIView):
         serializer_data = NotificationSerializer(notification).data
 
         channel = get_channel_layer()
-        print(channel)
+     
         async_to_sync(channel.group_send)(
                 groupName,
                 {
@@ -131,7 +129,7 @@ class PostView(APIView):
         return Response(serializer.data, status=status.HTTP_201_CREATED)
     
     def delete(self, request, pk):
-        print("jhkahdka")
+       
         ob = Post.objects.get(pk = pk)
         ob.delete()
 
@@ -139,8 +137,7 @@ class PostView(APIView):
     def patch(self, request, pk):
         parser_classes = [MultiPartParser, FormParser]
         ob = Post.objects.get(pk = pk)
-        print(ob)
-        print(request.data)
+      
         serializer = PostSerializer(ob, data= request.data)
 
         if serializer.is_valid():
@@ -244,7 +241,7 @@ class Like(APIView):
     permission_classes = [IsAuthenticated]
     def post(self, request):
         post_id = request.data.get("post_id")
-        print(f"haha {post_id}")
+        
         liked_post = Post.objects.get(pk = post_id)
         liker = request.user
 
@@ -257,7 +254,7 @@ class Unlike(APIView):
     permission_classes = [IsAuthenticated]
     def post(self, request):
         post_id = request.data.get("post_id")
-        print(f"huhu {post_id}")
+       
         liked_post = Post.objects.get(pk = post_id)
         liker = request.user
 
@@ -295,11 +292,11 @@ class CommentView(APIView):
         post = Post.objects.create(creater=request.user, caption=caption, is_comment = True, parent_post = parent_post)
 
         for media_file in media_files:
-            print(media_file)
+          
             media = Media.objects.create(post=post, file=media_file)
             media.save()
 
-        print("received notification")
+       
         if parent_post.creater.id != request.user.id:
             groupName  = ""
             if parent_post.creater.id < request.user.id:
@@ -315,7 +312,7 @@ class CommentView(APIView):
                 serializer_data = NotificationSerializer(notification).data
 
                 channel = get_channel_layer()
-                print(channel)
+            
                 async_to_sync(channel.group_send)(
                         groupName,
                         {

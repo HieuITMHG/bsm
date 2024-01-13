@@ -44,13 +44,13 @@ const SinglePost = (props) => {
             setIsLike(is_liked);
             setCount(postResponse.liker.length)
             setIsLoading(false)
-            console.log("render")
+    
         })
         .catch(error => {
             if (error.message.includes('404')) {
                 setNotFound(true);
                 setIsLoading(false)
-                console.log("not found");
+     
             }
         });
     }
@@ -86,7 +86,7 @@ const SinglePost = (props) => {
         .then((response) => response.json())
         .then((data) => {
             setCount(data.liker.length)
-            console.log(data)
+      
             setIsLike(true)
         })
     }
@@ -106,32 +106,32 @@ const SinglePost = (props) => {
         .then((response) => response.json())
         .then((data) => {
             setCount(data.liker.length)
-            console.log(data)
+       
             setIsLike(false)
         })
     }
 
     const handleNext = () => {
-        console.log(index)
+     
         if(index == post.media.length-1) {
             setIndex(0)
-            console.log("lên đầu")
+         
         }else {
             let a = index+1;
             setIndex(a)
-            console.log("next")
+          
         }
     }
 
     const handleBack = () => {
-        console.log(index)
+      
         if(index == 0) {
             setIndex(post.media.length-1)
-            console.log("về cuối")
+      
         }else {
             let a = index-1;
             setIndex(a)
-            console.log("back")
+   
         }
     }
 
@@ -145,18 +145,21 @@ const SinglePost = (props) => {
     return (
     
         <div className="singlePostContainer">
-            <span className="material-symbols-outlined arrow" onClick={handleBack} >arrow_left</span>
-            <div className="pictureContainer">
-                    <span className="material-symbols-outlined xi" onClick={() => {navigate(-1)}}>close</span>
-                        {post.media.length !== 0 ? (
-                        post.media[0].file.endsWith('.mp4') || post.media[0].file.endsWith('.webm') || post.media[0].file.endsWith('mov') ? (
-                        <video src={post.media[index].file} controls alt='video' className="picture" />
-                        ) : (
-                        <img src={post.media[index].file} alt='image' className="picture" />)
-                        ) : (<div className="captionhehe"><h1>{post.caption}</h1></div>)}
-                        
+            <div className="mediaSide">
+                <span className="material-symbols-outlined arrow" onClick={handleBack} >arrow_left</span>
+                <div className="pictureContainer">
+                        <span className="material-symbols-outlined xi" onClick={() => {navigate(-1)}}>close</span>
+                            {post.media.length !== 0 ? (
+                            post.media[0].file.endsWith('.mp4') || post.media[0].file.endsWith('.webm') || post.media[0].file.endsWith('mov') ? (
+                            <video src={post.media[index].file} controls alt='video' className="picture" />
+                            ) : (
+                            <img src={post.media[index].file} alt='image' className="picture" />)
+                            ) : (<div className="captionhehe"><h1>{post.caption}</h1></div>)}
+                            
+                </div>
+                <span className="material-symbols-outlined arrow" onClick={handleNext} >arrow_right</span>
             </div>
-            <span className="material-symbols-outlined arrow" onClick={handleNext} >arrow_right</span>
+            
             
             <div className="commentSide">
                 <div className="scrollable">

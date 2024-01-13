@@ -48,7 +48,8 @@ const Profile = (props) => {
     }else {
         return (
             <div className="homeContainer">
-                <Navbar socket = {props.socket}/>
+                <Navbar socket = {props.socket} reNo = {reNo} setReNo = {setReNo}/>
+                <div className="notification-alert"  style={{display:'none'}}></div>
                 {!isLoading && 
                     <div className='mainView'>    
                         <UserInfo userid = {userid}/> 
@@ -61,7 +62,10 @@ const Profile = (props) => {
                         </div> 
                     </div>
                 }
-                <Chatapp socket={props.socket} cuser = {cuserRef.current} reNo ={reNo} setReNo = {setReNo}/>
+                <div className="chatAppCrapper">
+                    <Chatapp socket={props.socket} cuser = {cuserRef.current} reNo ={reNo} setReNo = {setReNo}/>
+                </div>
+                
             </div>
         )
     }

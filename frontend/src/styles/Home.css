@@ -1,9 +1,14 @@
-* {
+body, html {
     margin: 0;
     padding: 0;
+    width: 100%;
+    height: 100%;
     box-sizing: border-box;
 }
 
+* {
+    box-sizing: inherit;
+}
 :root {
     --button-collor: rgb(145,199,233);
     --shadow-collor: rgba(0, 0, 0, 0.24) 0px 3px 8px;
@@ -11,9 +16,12 @@
     --popup-collor:#f0f2f5;
   }
 
+
 .homeContainer {
     display: flex;
     justify-content: space-between;
+    overflow-x: none;
+    background-color: #f0f2f5;
 }
 
 .postsView {
@@ -74,20 +82,29 @@
 
 
 #openButton {
-    width: 100%;
+    width: 90%;
     height: 50px;
-    background-color: #f0f2f5;
+    background-color: #e4e6e9;
     border: none;
     border-radius: 20px;
     color: #a2a4a8;
 }
 
 #openButton:hover {
-    background-color: #e4e6e9;
+    background-color: var(--overlay-collor);
+}
+
+
+.toggleMessage {
+    display: none;
 }
 
 .triggerForm {
     width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+   
 }
 
 
@@ -157,6 +174,7 @@
 
 
 .postsContainer {
+    background-color: white;
     width: 100%;
     box-shadow: var(--shadow-collor);
     margin-top:10px;
@@ -320,9 +338,12 @@
     background-color: #e4e6e9;
 }
 
+.peopleContainer {
+    display: flex;
+}
+
 
 .userListContaier {
-    margin-left: 350px;
     display: flex;
     padding: 50px;
     flex-wrap: wrap;
@@ -372,7 +393,7 @@
 
 
 .profileContainer {
-    min-width: 600px;
+    width: 600px;
     display: flex;
     flex-direction: column;  
     min-height: 210px;
@@ -380,6 +401,7 @@
     border-radius: 20px;
     justify-content: space-between;
     padding: 5px;
+    background-color: white;
 }
 
 .profileAvatar {
@@ -528,6 +550,7 @@ button:hover {
     width: 100%;
     padding: 10px;
     cursor: pointer;
+    align-items: center;
 }
 
 .receiverContainer:hover {
@@ -834,10 +857,11 @@ button:hover {
         background-color: white;
         border-right:none ;
         max-width: 100vw;
+        box-sizing: border-box;
     }
 
     .navItem{
-        font-size: 10px;
+        font-size: 15px;
     }
     
     .homeContainer {
@@ -852,27 +876,86 @@ button:hover {
         width: 500px;
     }
 
+    .profileContainer {
+        width: 500px;
+    }
+
     .mainView {
         margin-top: 60px;
     }
+
+    .toggleMessage {
+        display: block;
+    }
+
+    .toggleMessage:hover{
+        background-color: #a8a8a8;
+    }
+    
+    .chatAppCrapper {
+        display: none;
+    }
+
+    .chatli {
+        position: relative;
+    }
+
+    .chatAppContainer {
+        position: fixed;
+        top: 60px;
+        right:30px;
+        background-color: var(--button-collor);
+        height: 90vh;
+    }
+
+    
+
 }
 
 @media screen and (max-width: 500px) {
-    .postsView {
-        width: 400px;
-    }
-
-    .createPostContainer {
-        width: 400px;
-    }
-}
-
-@media screen and (max-width: 400px) {
     .postsView {
         width: 300px;
     }
 
     .createPostContainer {
-        width: 250px;
+        width: 300px;
+    }
+
+    .profileContainer {
+        width: 300px;
+    }
+
+    .ww {
+        font-size: 15px;
+    }
+
+    .avatarContainer {
+        height: 30px;
+        width: 30px;
+    }
+
+    .profileAvatar {
+        height: 50px;
+        width: 50px;
+    }
+
+    .chatAppContainer {
+        position: fixed;
+        top: 56px;
+        right: 0;
+        background-color: var(--button-collor);
+        height: calc(100vh - 60);
+        width: 100vw;
     }
 }
+
+@media screen and (max-width: 350px) {
+    .postsView {
+        width: 260px;
+    }
+
+    .createPostContainer {
+        width: 260px;
+    }
+}
+

@@ -3,7 +3,7 @@ import Notification from "./notification";
 import { NavLink } from "react-router-dom";
 
 const NotificationList = (props) => {
-    console.log(props.notifications)
+   
 
     if (props.notifications === null) { 
         return (

@@ -64,7 +64,7 @@ const Post = (props) => {
         .then((response) => response.json())
         .then((data) => {
             setCount(data.liker.length)
-            console.log(data)
+
             setIsLike(true)
         })
     }
@@ -84,7 +84,7 @@ const Post = (props) => {
         .then((response) => response.json())
         .then((data) => {
             setCount(data.liker.length)
-            console.log(data)
+
             setIsLike(false)
         })
     }

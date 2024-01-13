@@ -20,7 +20,7 @@ const UploadAvatar = (props) => {
 
     const handleUpdateAvatar = (e) => {
         const token = localStorage.getItem('access_token')
-        console.log(preview)
+     
         e.preventDefault();
         fetch('/api/updateavatar/', {
             method: 'POST',
@@ -34,7 +34,7 @@ const UploadAvatar = (props) => {
         })
         .then(response => response.json()) 
         .then(data => {
-            console.log(data);
+       
             props.func();
         })
         .catch(error => console.error('Error:', error));

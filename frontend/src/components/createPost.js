@@ -35,7 +35,6 @@ const CreatePost = (props) => {
 
     const handleChange = (e) => {
         const cap = e.target.textContent;
-        console.log(cap);
         setFormData({
             ...formData,
             caption: cap
@@ -88,7 +87,7 @@ const CreatePost = (props) => {
           media: updatedMedia
         }));
       };
-    
+
     return (
         <div className="createPostContainer">
             <div className="triggerForm">

@@ -19,7 +19,7 @@ const UpdateCollapse = (props) => {
         setIsOpenD(!isOpenD)
     }
 
-    console.log(props.post.id)
+ 
     const handleDelete = () => {
        fetch(`/api/posts/${props.post.id}`, {
         method: 'DELETE',
@@ -30,7 +30,6 @@ const UpdateCollapse = (props) => {
        .then((response) => {
         if (response.ok) {
             props.setMore(false)
-            console.log("Post deleted successfully");
         } else {
             return response.json().then((data) => {
                 console.error('Error deleting post:', data);
@@ -44,7 +43,7 @@ const UpdateCollapse = (props) => {
 
 
     const handleChange = (e) => {
-        console.log(e.target.textContent)
+     
         setNewCaption(e.target.textContent);
     }
 
@@ -63,7 +62,7 @@ const UpdateCollapse = (props) => {
         })
         .then(response => response.json())
         .then(data =>{
-            console.log(data)
+          
             props.setMore(false)
         })
     }

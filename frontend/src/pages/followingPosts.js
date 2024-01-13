@@ -55,7 +55,8 @@ const FollowingPosts = (props) => {
     }else {
     return (
         <div className="homeContainer">
-            <Navbar socket = {props.socket}/>
+            <Navbar socket = {props.socket} reNo = {reNo} setReNo = {setReNo}/>
+            <div className="notification-alert"  style={{display:'none'}}></div>
             <div className="mainView">
             
                 <div className='postsView'>

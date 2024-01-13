@@ -32,6 +32,7 @@
 }
 
 .navItem{
+    font-size: 25;
     list-style-type: none;
     height: 56px;
     display: block;
@@ -47,7 +48,7 @@ li:hover {
     background-color: aliceblue; 
 }
 
-.navItem .material-symbols-outlined {
+.ww {
     font-size: 30px;
     line-height: 56px;
     position: absolute;

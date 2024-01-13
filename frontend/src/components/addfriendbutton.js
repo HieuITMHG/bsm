@@ -20,7 +20,7 @@ const AddFriendButton = ({ user }) => {
         .then((data) => {
           setUserId(data.id);
           setLoading(false);
-            console.log(data)
+         
           // Check if the user is followed by the logged-in user
           const isUserFollowed = user.addfriend_by.includes(data.id);
           const isketket = data.addfriend_by.includes(user.id);
@@ -43,7 +43,7 @@ const AddFriendButton = ({ user }) => {
     })
       .then((response) => response.json())
       .then((data) => {
-        console.log(data);
+
         setAction(true); // User is now followed
       })
       .catch((error) => console.error("Error:", error));
@@ -61,7 +61,7 @@ const AddFriendButton = ({ user }) => {
     })
       .then((response) => response.json())
       .then((data) => {
-        console.log(data);
+   
         setAction(false); // User is now unfollowed
         setKetket(data.ketket)
       })

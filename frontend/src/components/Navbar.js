@@ -4,6 +4,8 @@ import { useState, useEffect } from 'react';
 import '../styles/navBar.css'
 import ProfileOpen from './profileOpen';
 import NotificationList from './notificationlist';
+import Chatapp from './chatapp';
+
 
 const Navbar = (props) => {
   const navigate = useNavigate();
@@ -12,9 +14,42 @@ const Navbar = (props) => {
   const [Loading, setLoading] = useState(true)
   const [open, setOpen] =  useState(false)
   const [num, setNum] = useState(0)
+  const [chat, setChat] = useState(false)
+  const [windowWidth, setWindowWidth] = useState(0)
+
+
+
+
+
+  useEffect(() => {
+    // Update the state when the window is resized
+    const handleResize = () => {
+      setWindowWidth(window.innerWidth);
+    };
+
+    window.addEventListener('resize', handleResize);
+
+    // Clean up the event listener when the component unmounts
+    return () => {
+      window.removeEventListener('resize', handleResize);
+    };
+  }, []); // Run this effect only once on mount
+
+  useEffect(() => {
+    // Conditionally update setOpenChat based on window width
+    if (windowWidth > 1060) {
+      setChat(false);
+    }
+  }, [windowWidth, setChat]); 
+
+
+
+
 
     useEffect(() => {
         const access_token = localStorage.getItem('access_token');
+
+
   
         if (access_token) {
             fetch(`/api/user/`, {
@@ -45,6 +80,7 @@ const Navbar = (props) => {
   const [notifications, setNotifications] = useState(null); 
 
   useEffect(()=> {
+   
       const access_token = localStorage.getItem('access_token');
       fetch(`/chat/notification/`, {
           headers: {
@@ -54,18 +90,24 @@ const Navbar = (props) => {
       })
       .then(response => response.json())
       .then(data => {
-        console.log(data)
+       
           setNotifications(data);
           let haha = 0;
+          if(data['code' != "user_not_found"]) {
           data.map(not => {
             if(not.is_seen == false) {
               haha = haha+1;
-              console.log(haha)
+           
             }
           })
+        }
           setNum(haha)
       });
   }, [props.reNo]);
+
+  const handleChat = () => {
+    setChat(!chat)
+  }
 
   if(!Loading && notifications != null) {
     return (
@@ -74,7 +116,7 @@ const Navbar = (props) => {
         <ul>
           <li className='navItem' onClick={ToggleNotification}>
          
-                <span className="material-symbols-outlined">notifications</span> 
+                <span className="material-symbols-outlined ww">notifications</span> 
                 <div className='countNotification'>{num}</div>
            
           </li>
@@ -83,7 +125,7 @@ const Navbar = (props) => {
           </li>
           <li className='navItem'>
             <NavLink to="/" >
-               <span className="material-symbols-outlined">home</span>       
+               <span className="material-symbols-outlined ww">home</span>       
             </NavLink>
           </li>
           <li className='navItem'>
@@ -91,14 +133,18 @@ const Navbar = (props) => {
           </li>
           <li className='navItem'>
             <a href="#" onClick={handleLogout}>
-              <span className="material-symbols-outlined">logout</span>
+              <span className="material-symbols-outlined ww">logout</span>
             </a>
           </li>
           <li className='navItem'>
             <NavLink to="/people" >
-              <span className="material-symbols-outlined">group</span>
+              <span className="material-symbols-outlined ww">group</span>
             </NavLink>
           </li>
+            <li className='navItem chatli' >     
+              <span className="material-symbols-outlined toggleMessage" onClick={handleChat}>mail</span> 
+              {chat && <Chatapp socket={props.socket} cuser = {user} reNo = {props.reNo} setReNo = {props.setReNo} />}    
+            </li>
         </ul>
       </nav>
 

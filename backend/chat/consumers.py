@@ -60,7 +60,7 @@ class ChatConsumer(WebsocketConsumer):
 
 
     def receive(self, text_data):
-        print("BIG FAN SIR")
+    
         data_json = json.loads(text_data)
         type = data_json['type']     
         if type == "update":
@@ -100,7 +100,7 @@ class ChatConsumer(WebsocketConsumer):
 
 
     def chat_message(self, event):
-        print("YOU ARE WELCOME")
+       
         content = event['content']
         group = event['group']
         self.send(text_data=json.dumps({
@@ -110,7 +110,7 @@ class ChatConsumer(WebsocketConsumer):
         }))
 
     def update(self,event):
-        print("update typing status")
+       
         typing_status = event['typing_status']
         who = event['who']
         self.send(text_data=json.dumps({
@@ -120,7 +120,7 @@ class ChatConsumer(WebsocketConsumer):
         }))
 
     def online_status(self, event):
-        print("Online Status")
+       
         online_status = event['online_status']
         onliner_id = event['onliner_id']
         self.send(text_data=json.dumps({
@@ -137,7 +137,7 @@ class ChatConsumer(WebsocketConsumer):
         }))
 
     def notification(self, event):
-        print("prepared to send notifation")
+        
         notification = event['notification']
         post_id = event['post_id']
         self.send(text_data=json.dumps({

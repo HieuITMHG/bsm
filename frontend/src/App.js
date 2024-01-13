@@ -10,7 +10,6 @@ import UploadAvatar from './components/uploadAvatar';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import FollowingsView from './pages/followingsView';
 import FollowersView from './pages/followersView';
-import MyComponent from './components/lkalfk';
 
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
 
@@ -33,7 +32,6 @@ function App() {
           });
 
           if (refreshResponse.ok) {
-            console.log("new access token");
             const newData = await refreshResponse.json();
             localStorage.setItem('access_token', newData.access);
             
@@ -48,30 +46,25 @@ function App() {
 
 const websocketconnect = () => {
   // Kiểm tra nếu WebSocket chưa được khởi tạo
-  console.log("execute websocket")
   const access_token = localStorage.getItem('access_token')
 
     const newSocket = new WebSocket(`ws://localhost:8000/ws/chat/?token=${encodeURIComponent(access_token)}`);
     
     newSocket.onopen = () => {
-      console.log(`WebSocket connected`);
     };
 
     newSocket.onclose = () => {
-      console.log("disconnected")
     }
     socketRef.current = newSocket
 
   return () => {
     if (socketRef.current) {
       socketRef.current.close();
-      console.log(`WebSocket disconnected`);
     }
   };
 }
 
 useEffect(() => {
-  console.log(trigger);
   
   const fetchData = async () => {
     await checkTokenValidity();
@@ -105,7 +98,6 @@ useEffect(() => {
             <Route path='/post/:postid' element={<SinglePost socket = {socketRef.current}/>} />
             <Route path='/followings/:userid' element={<FollowingsView />} />
             <Route path='/followers/:userid' element = {<FollowersView />} />
-            <Route path='/test/' element = {<MyComponent />} />
           </Routes>
       </div>
     );

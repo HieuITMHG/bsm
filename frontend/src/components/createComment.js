@@ -32,7 +32,6 @@ const CreateComment = (props) => {
 
     const handleChange = (e) => {
         const cap = e.target.textContent;
-        console.log(cap);
         setFormData({
             ...formData,
             caption: cap

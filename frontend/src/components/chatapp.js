@@ -14,10 +14,10 @@ const Chatapp = (props) => {
 
       const handleMessage = (event) => {
         const data = JSON.parse(event.data);
-        console.log("chat app received")
+        
         if (data.type === "chat_message") {
             setMessage(data.content)
-            console.log(data.content)
+        
         }else if (data.type === "online_status") {
             if (data.online_status == true){
               setOnlines(preOnlines => [...preOnlines, data.onliner_id])
@@ -30,9 +30,8 @@ const Chatapp = (props) => {
           setDeletedMessages(predele => [...predele, data.message_id])
         }
         else if (data.type === "notification"){
-          console.log(data)
           if(data.notification.sender.id != props.cuser.id) {
-            props.setReNo(!props.reNo)
+              props.setReNo(!props.reNo)
               alert = document.querySelector('.notification-alert')
               alert.style.display='flex'
               alert.innerText = data.notification.content
@@ -64,7 +63,7 @@ const Chatapp = (props) => {
             .then((data) => {
               setGroups(data)
               setFilteredGroups(data)
-              console.log(data)
+       
             })
             .catch((error) => console.error("Error:", error));
 
@@ -101,7 +100,7 @@ const Chatapp = (props) => {
           
         );
 
-        console.log(filteredItems)
+      
     
         setFilteredGroups(filteredItems);
       }
@@ -116,10 +115,7 @@ const Chatapp = (props) => {
               <div className="notification-alert"  style={{display:'none'}}></div>
 
               <div className="searchFriend">
-
-                <input onChange={handleChange}></input>
-                <div className="searchBtn"><span className="material-symbols-outlined">search</span></div>
-                
+                <input onChange={handleChange}></input>               
               </div>
 
               {

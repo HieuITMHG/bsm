@@ -25,14 +25,14 @@ const People = (props) => {
 
 
     return (
-        <>
+        <div className="peopleContainer">
         <Navbar socket = {props.socket}/>
             <div className="userListContaier">
                     {users.map(user => (           
                             <UserCard user = {user} key={user.id}/>
                     ))}
             </div>
-        </>            
+        </div>            
     )
 }
 

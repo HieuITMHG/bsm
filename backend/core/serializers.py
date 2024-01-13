@@ -33,8 +33,7 @@ class UserSerializer(serializers.ModelSerializer):
         }
 
     def validate_email(self, value):
-        print("o0o0o0o0o0o VALUE HERE o0o00oo0o0o00oo0")
-        print(value)
+    
         try:
             validate_email(value)
         except ValidationError:
@@ -47,8 +46,7 @@ class UserSerializer(serializers.ModelSerializer):
         return value
     
     def validate_password(self, value):
-        print("o0o0o0o0o0o VALUE HERE o0o00oo0o0o00oo0")
-        print(value)
+     
         try:
             django_validate_password(value)
         except ValidationError as e:

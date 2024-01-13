@@ -35,7 +35,7 @@ const LoginForm = (props) => {
             } else {
                 const key = Object.keys(data)[0]
                 const err = data[key]
-                console.log(err)
+              
 
                 const alert = document.querySelector('.errorAlert')
                 alert.style.display = 'block'
@@ -49,7 +49,7 @@ const LoginForm = (props) => {
 
     return (
         <div className="loginFormContainer">
-            <div class="alert alert-warning errorAlert" style={{display: 'none'}}><strong>Warning!</strong></div>
+            <div className="alert alert-warning errorAlert" style={{display: 'none'}}><strong>Warning!</strong></div>
             <h1>Login</h1>
             <form>
                 <input autoFocus placeholder="Username" name="username" onChange={handleChange} />
