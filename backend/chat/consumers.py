@@ -9,6 +9,7 @@ from django.db.models import Q
 
 class ChatConsumer(WebsocketConsumer):
     def connect(self):
+        print("connect")
         self.user = self.scope['user']
 
         user = User.objects.get(pk = self.user.id)
@@ -36,7 +37,7 @@ class ChatConsumer(WebsocketConsumer):
 
     
     def disconnect(self, close_code):
-
+        print("disconnect")
         user = User.objects.get(pk = self.user.id)
         user.online_status = False
         user.save()

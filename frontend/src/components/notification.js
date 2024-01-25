@@ -13,7 +13,7 @@ const Notification = (props) => {
     });
 
     const handleChange = () => {
-        fetch(`chat/is_seen/${props.notification.id}`, {
+        fetch(`http://localhost:8000/chat/is_seen/${props.notification.id}`, {
             headers : {
                 Authorization: `Bearer ${access_token}`
             }

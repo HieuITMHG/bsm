@@ -73,7 +73,7 @@ const SinglePost = (props) => {
 
     const handleLike = (e) => {
         e.preventDefault();
-        fetch("/api/like/", {
+        fetch("http://localhost:8000/api/like/", {
             method : "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -93,7 +93,7 @@ const SinglePost = (props) => {
 
     const handleUnlike = (e) => {
         e.preventDefault();
-        fetch("/api/unlike/", {
+        fetch("http://localhost:8000/api/unlike/", {
             method : "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -151,9 +151,9 @@ const SinglePost = (props) => {
                         <span className="material-symbols-outlined xi" onClick={() => {navigate(-1)}}>close</span>
                             {post.media.length !== 0 ? (
                             post.media[0].file.endsWith('.mp4') || post.media[0].file.endsWith('.webm') || post.media[0].file.endsWith('mov') ? (
-                            <video src={post.media[index].file} controls alt='video' className="picture" />
+                            <video src={`http://localhost:8000${post.media[index].file}`} controls alt='video' className="picture" />
                             ) : (
-                            <img src={post.media[index].file} alt='image' className="picture" />)
+                            <img src={`http://localhost:8000${post.media[index].file}`} alt='image' className="picture" />)
                             ) : (<div className="captionhehe"><h1>{post.caption}</h1></div>)}
                             
                 </div>

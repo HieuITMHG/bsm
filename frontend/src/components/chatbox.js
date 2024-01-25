@@ -23,7 +23,7 @@ function ChatBox(props) {
         formdata.append(`receiver_id`, props.receiver.id)
         formdata.append('content', message)
 
-        fetch('/chat/message/', {
+        fetch('http://localhost:8000/chat/message/', {
             method: 'POST',
             headers: {
                 Authorization: `Bearer ${token}`,

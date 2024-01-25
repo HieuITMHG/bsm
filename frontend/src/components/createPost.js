@@ -62,7 +62,7 @@ const CreatePost = (props) => {
             formdata.append('media', file);
         });
 
-        fetch('/api/posts/', {
+        fetch('http://localhost:8000/api/posts/', {
             method: 'POST',
             headers: {
                 Authorization: `Bearer ${token}`,

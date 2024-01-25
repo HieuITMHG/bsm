@@ -18,7 +18,7 @@ const LoginForm = (props) => {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        fetch('/api/login/', {
+        fetch('http://localhost:8000/api/login/', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json', 
@@ -45,7 +45,8 @@ const LoginForm = (props) => {
                 }, 2000)
             }
         })
-        .catch(error => console.error('Error:', error));}
+        .catch(error => console.error('Error:', error));
+    }
 
     return (
         <div className="loginFormContainer">

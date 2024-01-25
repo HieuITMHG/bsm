@@ -13,7 +13,7 @@ const FollowingPosts = (props) => {
     const [reNo, setReNo] = useState([])
 
     useEffect(() => {
-        fetch('/api/following/', {
+        fetch('http://localhost:8000/api/following/', {
             headers: {
                 'Authorization': `Bearer ${accessToken}`
             }

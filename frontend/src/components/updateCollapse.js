@@ -21,7 +21,7 @@ const UpdateCollapse = (props) => {
 
  
     const handleDelete = () => {
-       fetch(`/api/posts/${props.post.id}`, {
+       fetch(`http://localhost:8000/api/posts/${props.post.id}`, {
         method: 'DELETE',
         headers: {
             Authorization: `Bearer ${access_token}`
@@ -49,7 +49,7 @@ const UpdateCollapse = (props) => {
 
     const handleEdit = (e) => {
         e.preventDefault();
-        fetch(`api/posts/${props.post.id}/`, {
+        fetch(`http://localhost:8000/api/posts/${props.post.id}/`, {
             method: 'PATCH', 
             headers:{
                 Authorization: `Bearer ${access_token}`,

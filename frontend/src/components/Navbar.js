@@ -52,7 +52,7 @@ const Navbar = (props) => {
 
   
         if (access_token) {
-            fetch(`/api/user/`, {
+            fetch(`http://localhost:8000/api/user/`, {
                 headers: {
                     'Authorization': `Bearer ${access_token}`
                 }
@@ -82,7 +82,7 @@ const Navbar = (props) => {
   useEffect(()=> {
    
       const access_token = localStorage.getItem('access_token');
-      fetch(`/chat/notification/`, {
+      fetch(`http://localhost:8000/chat/notification/`, {
           headers: {
               Authorization: `Bearer ${access_token}`,
               'Content-Type': 'application/json',

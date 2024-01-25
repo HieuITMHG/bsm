@@ -11,7 +11,7 @@ const AddFriendButton = ({ user }) => {
     const access_token = localStorage.getItem("access_token");
 
     if (access_token) {
-      fetch("/api/user/", {
+      fetch("http://localhost:8000/api/user/", {
         headers: {
           Authorization: `Bearer ${access_token}`,
         },
@@ -33,7 +33,7 @@ const AddFriendButton = ({ user }) => {
 
   const handleFollow = (e) => {
     e.preventDefault();
-    fetch("/api/addfriend/", {
+    fetch("http://localhost:8000/api/addfriend/", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

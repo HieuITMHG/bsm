@@ -1,6 +1,6 @@
-import { NavLink, useParams } from "react-router-dom"
-import { useState, useEffect } from "react";
+import { NavLink } from "react-router-dom"
 import '../styles/Home.css'
+import defaultAvatar from '../assets/defaultAvatar.png';
 
 const ProfileOpen = (props) => {
     if(props.user) {
@@ -8,7 +8,7 @@ const ProfileOpen = (props) => {
             <div className="profileOpen">
                 <NavLink to={`/profile/${props.user.id}`} className="linktoprofile">
                     <div className="avatarContainer">
-                        <img src={props.user.avatar.file} alt="avatar" className="avatar"/>
+                        <img src={defaultAvatar} alt="avatar" className="avatar"/>
                     </div>
                     <div><strong>{props.user.username}</strong></div>
                 </NavLink>

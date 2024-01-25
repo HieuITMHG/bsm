@@ -16,7 +16,7 @@ const Home = (props) => {
       const access_token = localStorage.getItem("access_token");
         
       if (access_token) {
-        fetch("/api/user/", {
+        fetch("http://localhost:8000/api/user/", {
           headers: {
             Authorization: `Bearer ${access_token}`,
           },
@@ -35,7 +35,7 @@ const Home = (props) => {
    
     useEffect(() => {
         const fet = () => {
-            fetch('/api/posts/')
+            fetch('http://localhost:8000/api/posts/')
             .then(response => response.json())
             .then(data => {
                 setPosts(data);

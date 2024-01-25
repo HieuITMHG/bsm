@@ -27,7 +27,7 @@ SECRET_KEY = 'django-insecure-ku(ef!bcn4(g_f%f@6lp)qlby3jb5%llh!5%j1y7k7d=v^g&r1
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = ["*"]
 
 
 # Application definition
@@ -93,10 +93,12 @@ DATABASES = {
         'NAME': 'bsm',
         'USER': 'root',
         'PASSWORD': '123456',
-        'HOST': 'localhost',       
+        'HOST': 'db',
+        'PORT': '3306'
     }
 }
 
+# Redis settings
 
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
@@ -167,12 +169,13 @@ MEDIA_URL = '/media/'
 ASGI_APPLICATION = "backend.asgi.application"
 
 CHANNEL_LAYERS = {
-    "default": {
-        "BACKEND": "channels_redis.core.RedisChannelLayer",
-        "CONFIG": {
-            "hosts": [("127.0.0.1", 6380)],
+    'default': {
+        'BACKEND': 'channels_redis.core.RedisChannelLayer',
+        'CONFIG': {
+            'hosts': [('redis-server', 6379)],
         },
     },
 }
+
 
 DATETIME_FORMAT = 'Y-m-d H:i:s'

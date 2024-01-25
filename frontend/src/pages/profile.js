@@ -15,7 +15,7 @@ const Profile = (props) => {
     const [reNo, setReNo] = useState([])
 
     useEffect(() => {
-        fetch(`/api/ppost/${userid}`)
+        fetch(`http://localhost:8000/api/ppost/${userid}`)
         .then(response => response.json())
         .then(data => {
             setPosts(data);

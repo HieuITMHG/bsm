@@ -18,7 +18,7 @@ const RegisterForm = ({toggleForm}) => {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        fetch('/api/register/', {
+        fetch('http://localhost:8000/api/register/', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json', 

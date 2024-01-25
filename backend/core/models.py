@@ -6,7 +6,7 @@ class User(AbstractUser):
     follow = models.ManyToManyField('self', blank=True, symmetrical=False, related_name='followed_by')
     addfriend = models.ManyToManyField('self', blank=True, symmetrical=False, related_name='addfriend_by')
     friends = models.ManyToManyField('self', blank=True)
-    avatar = models.ForeignKey('Media', blank=True, null=True, on_delete=models.CASCADE, related_name='post_avatar', default=80)
+    avatar = models.ForeignKey('Media', blank=True, null=True, on_delete=models.CASCADE, related_name='post_avatar', default = 6)
     aboutme = models.CharField(max_length=100, default="About me", blank=True)
     online_status = models.BooleanField(default = False)
     def __str__(self):

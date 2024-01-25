@@ -1,0 +1,81 @@
+version: '3'
+
+services:
+  db:
+    image: mysql:8.0
+    restart: always
+    environment:
+      MYSQL_DATABASE: bsm
+      MYSQL_ROOT_PASSWORD: 123456
+      MYSQL_HOST: 0.0.0.0
+      MYSQL_PORT: 3306
+    ports:
+      - '3307:3306'
+    volumes:
+      - mysql_data:/var/lib/mysql
+    networks:
+      - my_network
+
+  backend:
+    build: 
+      context: ./backend
+    ports:
+      - "8000:8000"
+    command: python manage.py runserver 0.0.0.0:8000
+    depends_on:
+      - db
+      - cache
+    environment:
+      - REDIS_HOST=cache
+      - REDIS_PORT=6379
+      - MYSQL_DATABASE=bsm
+      - MYSQL_USER=root
+      - MYSQL_ROOT_PASSWORD:123456
+      - MYSQL_HOST=db
+      - MYSQL_PORT=3306
+    volumes:
+      - django_db:/backend
+      - ./backend/build:/backend/build
+    networks:
+      - my_network
+
+  frontend:
+    build: 
+      context: ./frontend
+    volumes:
+      - react_build:/frontend
+      - ./frontend/build:/frontend/build  # Bind mount
+    command: npm start
+    ports:
+      - "3000:3000"
+    depends_on:
+      - db
+      - cache
+    networks:
+      - my_network
+
+  cache:
+    image: redis:latest
+    restart: always
+    ports:
+      - '6379:6379'
+    command: redis-server --save 20 1 --loglevel warning
+    volumes: 
+      - redis_data:/data
+      - ./redis_data:/data
+    environment:
+      - REDIS_PORT=6379
+      - REDIS_DATABASES=16
+    networks:
+      - my_network
+    container_name: redis-server
+
+networks:
+  my_network:
+    driver: bridge
+
+volumes:
+  react_build:
+  mysql_data:
+  redis_data:
+  django_db:

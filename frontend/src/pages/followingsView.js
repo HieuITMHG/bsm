@@ -9,7 +9,7 @@ const FollowingsView = () => {
     const navigate = useNavigate();
 
     useEffect(() => {
-        fetch(`/api/following/${userid}/`, {
+        fetch(`http://localhost:8000/api/following/${userid}/`, {
             headers: {
                 "Content-Type": "application/json",
             }

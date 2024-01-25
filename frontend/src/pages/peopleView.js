@@ -11,7 +11,7 @@ const People = (props) => {
     
 
     useEffect(() => {
-        fetch('/api/users/', {
+        fetch('http://localhost:8000/api/users/', {
             headers : {
                 'Authorization': `Bearer ${accessToken}`
             }

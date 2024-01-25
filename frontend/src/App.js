@@ -22,7 +22,7 @@ function App() {
   const checkTokenValidity = async () => {
     const refreshToken = localStorage.getItem('refresh_token');
       try {
-          const refreshResponse = await fetch('/api/token/refresh/', {
+          const refreshResponse = await fetch('http://localhost:8000/api/token/refresh/', {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',

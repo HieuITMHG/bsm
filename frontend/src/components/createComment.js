@@ -61,7 +61,7 @@ const CreateComment = (props) => {
             formdata.append('media', file);
         });
 
-        fetch('/api/comment/', {
+        fetch('http://localhost:8000/api/comment/', {
             method: 'POST',
             headers: {
                 Authorization: `Bearer ${token}`,

@@ -54,7 +54,7 @@ const Chatapp = (props) => {
         const access_token = localStorage.getItem("access_token");
     
         if (access_token) {
-          fetch("/chat/groupchats/", {
+          fetch("http://localhost:8000/chat/groupchats/", {
             headers: {
               Authorization: `Bearer ${access_token}`,
             },

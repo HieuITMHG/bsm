@@ -22,7 +22,7 @@ const UploadAvatar = (props) => {
         const token = localStorage.getItem('access_token')
      
         e.preventDefault();
-        fetch('/api/updateavatar/', {
+        fetch('http://localhost:8000/api/updateavatar/', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json', 

@@ -51,7 +51,7 @@ const Post = (props) => {
 
     const handleLike = (e) => {
         e.preventDefault();
-        fetch("/api/like/", {
+        fetch("http://localhost:8000/api/like/", {
             method : "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -71,7 +71,7 @@ const Post = (props) => {
 
     const handleUnlike = (e) => {
         e.preventDefault();
-        fetch("/api/unlike/", {
+        fetch("http://localhost:8000/api/unlike/", {
             method : "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -154,9 +154,9 @@ const Post = (props) => {
                             props.post.media.map(medi => (
                                 <div key={`${medi.id}i`} className='mediaCraper'>
                                 {medi.file.endsWith('.mp4') || medi.file.endsWith('.webm') || medi.file.endsWith('mov')? 
-                                        <video src={medi.file} controls alt='video' className='media' />
+                                        <video src={`http://localhost:8000${medi.file}`} controls alt='video' className='media' />
                                         :
-                                        <img src={medi.file} alt='image' className='media' />
+                                        <img src={`http://localhost:8000${medi.file}`} alt='image' className='media' />
                                     }
                                 </div>         
                             ))

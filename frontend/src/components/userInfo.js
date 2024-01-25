@@ -20,7 +20,7 @@ const UserInfo = (props) => {
 
 
     useEffect(() => {
-            fetch(`/api/users/${props.userid}`,{
+            fetch(`http://localhost:8000/api/users/${props.userid}`,{
                 headers: {
                     'Content-Type': 'application/json', 
                 }
@@ -36,7 +36,7 @@ const UserInfo = (props) => {
                 
   
                 if (access_token) {
-                    fetch(`/api/user/`, {
+                    fetch(`http://localhost:8000/api/user/`, {
                         headers: {
                             'Authorization': `Bearer ${access_token}`
                         }
@@ -73,7 +73,7 @@ const UserInfo = (props) => {
         useEffect(() => {
             let handle = (e) => {
                 if(!e.target.classList.contains('t') && hihi) {
-                    fetch('/api/bio/', {
+                    fetch('http://localhost:8000/api/bio/', {
                         method: "POST",
                         headers: {
                             'Authorization': `Bearer ${access_token}`,
