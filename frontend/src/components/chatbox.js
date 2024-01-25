@@ -59,7 +59,7 @@ function ChatBox(props) {
 
   useEffect(() => {
     const access_token = localStorage.getItem("access_token")
-    fetch(`/chat/singlegroupchat/${props.group.groupName}/`, {
+    fetch(`http://localhost:8000/chat/singlegroupchat/${props.group.groupName}/`, {
       headers: {
         'Content-Type': 'application/json',
         'Authorization': `Bearer ${access_token}`

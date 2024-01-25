@@ -36,6 +36,7 @@ services:
     volumes:
       - django_db:/backend
       - ./backend/build:/backend/build
+      - ./backend/media/:/django/media/
     networks:
       - my_network
 
