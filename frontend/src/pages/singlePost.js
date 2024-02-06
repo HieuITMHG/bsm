@@ -20,7 +20,7 @@ const SinglePost = (props) => {
 
     const getData = () => {
         Promise.all([
-            fetch(`/api/post/${postid}`).then(response => {
+            fetch(`http://localhost:8000/api/post/${postid}`).then(response => {
                 if (!response.ok) {
                     throw new Error(`Failed to fetch post: ${response.status}`);
                 }
@@ -56,7 +56,7 @@ const SinglePost = (props) => {
     }
 
     useEffect(() => {
-        const intervalId = setInterval(getData, 3000);
+        const intervalId = setInterval(getData, 1000);
     
         return () => {
             clearInterval(intervalId);

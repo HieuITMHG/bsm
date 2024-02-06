@@ -129,7 +129,7 @@ const Navbar = (props) => {
             </NavLink>
           </li>
           <li className='navItem'>
-            <NavLink to="/following">Following</NavLink>
+            <NavLink to="/following"><span>Following</span></NavLink>
           </li>
           <li className='navItem'>
             <a href="#" onClick={handleLogout}>
@@ -138,11 +138,11 @@ const Navbar = (props) => {
           </li>
           <li className='navItem'>
             <NavLink to="/people" >
-              <span className="material-symbols-outlined ww">group</span>
+                <span className="material-symbols-outlined ww">group</span>
             </NavLink>
           </li>
-            <li className='navItem chatli' >     
-              <span className="material-symbols-outlined toggleMessage" onClick={handleChat}>mail</span> 
+            <li className='navItem chatli' onClick={handleChat}>     
+              <span className="material-symbols-outlined toggleMessage" >mail</span> 
               {chat && <Chatapp socket={props.socket} cuser = {user} reNo = {props.reNo} setReNo = {props.setReNo} />}    
             </li>
         </ul>

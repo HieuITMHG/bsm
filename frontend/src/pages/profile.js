@@ -15,7 +15,8 @@ const Profile = (props) => {
     const [reNo, setReNo] = useState([])
 
     useEffect(() => {
-        fetch(`http://localhost:8000/api/ppost/${userid}`)
+        console.log("fetch")
+        fetch(`http://127.0.0.1:8000/api/ppost/${userid}`)
         .then(response => response.json())
         .then(data => {
             setPosts(data);
@@ -26,7 +27,7 @@ const Profile = (props) => {
         const access_token = localStorage.getItem("access_token");
         
       if (access_token) {
-        fetch("/api/user/", {
+        fetch("http://127.0.0.1:8000/api/user/", {
           headers: {
             Authorization: `Bearer ${access_token}`,
           },

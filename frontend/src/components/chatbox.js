@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useDebugValue } from 'react';
 import ProfileOpen from './profileOpen';
 import Message from './message';
+import defaultAvatar from '../assets/defaultAvatar.png';
 
 function ChatBox(props) {
   const [message, setMessage] = useState('');
@@ -169,7 +170,11 @@ function ChatBox(props) {
         <div className='receiverContainer' onClick={handleOpen}>
   
           <div className="avatarContainer">
-              <img src={props.receiver.avatar.file} alt="avatar" className="avatar"/>
+              {
+                props.receiver.avatar == null ? <img src={defaultAvatar} alt="avatar" className="avatar"/> :
+                <img src={`http:localhost${props.receiver.avatar.file}`} alt="avatar" className="avatar"/>
+              }
+              
           </div>
   
           <div className='nameames'>

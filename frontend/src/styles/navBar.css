@@ -8,10 +8,10 @@
     height: 100vh;
     max-width: 350px;
     width: 350px;
-    border-right: 1px solid gray;
     position:sticky;
     position: -webkit-sticky;
     top: 0px;
+    background-color: white;
 }
 
 .navBarContainer ul {
@@ -25,10 +25,18 @@
     width: 100%;
     text-decoration: none;
     color: black;
+    position: relative;
+}
+
+.navItem a span {
+    width: 100%;
     display: flex;
     justify-content: center;
+    position: absolute;
+    left: 0;
+    height: 100%;
+    display: flex;
     align-items: center;
-    text-align: center;
 }
 
 .navItem{

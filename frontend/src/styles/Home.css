@@ -340,6 +340,7 @@ body, html {
 
 .peopleContainer {
     display: flex;
+    background-color: var(--popup-collor);
 }
 
 
@@ -538,11 +539,11 @@ button:hover {
     min-width: 350px;
     height: 100vh;
     position: sticky;
-    border-left: 1px solid gray;
     right: 0;
     top: 0;
     display: flex;
     flex-direction: column;
+    background-color: white;
 }
 
 .receiverContainer {

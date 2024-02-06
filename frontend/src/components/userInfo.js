@@ -4,6 +4,7 @@ import UploadAvatar from "./uploadAvatar";
 import AddFriendButton from "./addfriendbutton";
 import AutoLink from "./autoLink";
 import { NavLink } from "react-router-dom";
+import defaultAvatar from '../assets/defaultAvatar.png';
 
 const UserInfo = (props) => {
     const [user, setUser] = useState({});
@@ -28,6 +29,7 @@ const UserInfo = (props) => {
                 .then(response => response.json())
                 .then(data => {
                     setUser(data);
+                    console.log(data)
                     setBio(data.aboutme)
                 })
                 .catch(error => console.error('Error:', error));
@@ -128,7 +130,11 @@ const UserInfo = (props) => {
                     
                     <div className="infoBox">
                         <div className="avatarContainer profileAvatar " onClick={func}>
-                            <img src={user.avatar.file} alt="avatar" className="avatar"/>
+                            {
+                                user.avatar == null ?<img src={defaultAvatar} alt="avatar" className="avatar"/> :
+                                <img src={user.avatar.file} alt="avatar" className="avatar"/>
+                            }
+                            
                         </div>
                         <div className="detailContainer">
                             <div><h2>{user.username}</h2></div>
